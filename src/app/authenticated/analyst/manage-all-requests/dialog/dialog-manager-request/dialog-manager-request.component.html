@@ -1,0 +1,37 @@
+<h2 mat-dialog-title>Gerenciar Requisição</h2>
+<mat-dialog-content class="mat-typography">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h4>Selecione o Almoxarifado:</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <section class="example-section" [formGroup]="almoxarifados">
+                    <p>
+                        <mat-checkbox formControlName="expediente">Expediente</mat-checkbox>
+                    </p>
+                    <p>
+                        <mat-checkbox formControlName="alimentacao">Alimentação</mat-checkbox>
+                    </p>
+                    <p>
+                        <mat-checkbox formControlName="higieneLimpeza">Higiene e Limpeza</mat-checkbox>
+                    </p>
+                    <p>
+                        <mat-checkbox formControlName="patrimonio">Patrimônio</mat-checkbox>
+                    </p>
+                    <p>
+                        <mat-checkbox formControlName="informatica">Informática</mat-checkbox>
+                    </p>
+                </section>
+            </div>
+        </div>
+    </div>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Encaminhar</button>
+</mat-dialog-actions>

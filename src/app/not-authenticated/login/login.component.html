@@ -1,0 +1,54 @@
+<article>
+
+    <section>
+        <div class="container">
+            <div class="row">
+
+                <div class="col-sm-6 div_logo">
+                    <img src="./../../assets/img/logo_pcr-completa.png" width="1000px" alt="Prefeitura da Cidade do Recife">
+                </div>
+
+                <div class="col-sm-6 div_form_login">
+                    <form [formGroup]="loginFormGroup">
+
+                        <div class="row">
+                            <mat-form-field appearance="outline">
+                                <mat-label>E-mail</mat-label>
+                                <input matInput placeholder="E-mail" type="text" formControlName="email" #input>
+                                <mat-icon class="icon-input" matSuffix>email</mat-icon>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="row">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Senha</mat-label>
+                                <input matInput [type]="hide ? 'text' : 'password'" formControlName="password">
+                                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="!hide">
+                                    <mat-icon class="icon-input"> {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="row">
+                            <button mat-flat-button color="primary" class="btn-main" (click)="buttonLogin()">
+                                Entrar
+                            </button>
+                        </div>
+
+                        <br>
+
+                        <div class="row">
+                            <p (click)="forgotThePassword()" class="p_password">
+                                Esqueci minha senha
+                            </p>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</article>
