@@ -14,4 +14,6 @@ export interface Solicitation {
     status: string;
     id_warehouse: number;
     operator?: string;
+    zip_code?: string;
+    district?: string;
 }

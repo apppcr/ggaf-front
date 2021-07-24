@@ -1,0 +1,202 @@
+<mat-card>
+    <div class="container">
+
+        <form [formGroup]="formRequestGroup">
+            <h1>Solicitante</h1>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <mat-form-field appearance="outline" class="width-input">
+                        <mat-label>Matrícula</mat-label>
+                        <input matInput placeholder="Matrícula" formControlName="registration">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-sm-8">
+                    <mat-form-field appearance="outline" class="width-input">
+                        <mat-label>Solicitante</mat-label>
+                        <input matInput placeholder="Solicitante" formControlName="requester">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-form-field appearance="outline" class="width-input">
+                        <mat-label>E-mail</mat-label>
+                        <input matInput placeholder="E-mail" formControlName="email">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-sm-6">
+                    <mat-form-field appearance="outline" class="width-input">
+                        <mat-label>Data da Solicitação</mat-label>
+                        <input matInput type="date" formControlName="requestDate">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <h1>Endereço</h1>
+
+            <div class="row">
+                <div class="col-sm-3">
+                    <mat-form-field appearance="outline" class="width-input">
+                        <mat-label>CEP</mat-label>
+                        <input matInput formControlName="zipCode" (change)="searchCep()">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-sm-7">
+                    <mat-form-field appearance="outline" class="width-input">
+                        <mat-label>Rua</mat-label>
+                        <input matInput formControlName="address">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-sm-2">
+                    <mat-form-field appearance="outline" class="width-input">
+                        <mat-label>N.</mat-label>
+                        <input matInput formControlName="number">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-sm-4">
+                    <mat-form-field appearance="outline" class="width-input">
+                        <mat-label>Bairro</mat-label>
+                        <input matInput formControlName="district">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-sm-4">
+                    <mat-form-field appearance="outline" class="width-input">
+                        <mat-label>Cidade</mat-label>
+                        <input matInput formControlName="city">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-sm-4">
+                    <mat-form-field appearance="outline" class="width-input">
+                        <mat-label>Estado</mat-label>
+                        <input matInput formControlName="state">
+                    </mat-form-field>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <mat-form-field appearance="outline" class="width-input">
+                        <mat-label>Complemento</mat-label>
+                        <input matInput formControlName="complement">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <h1>Adicionar Produto</h1>
+
+            <form [formGroup]="formAddProductGroup">
+                <div class="row">
+
+                    <div class="col-sm-3">
+                        <mat-form-field appearance="outline" class="width-input">
+                            <mat-label>CADUM</mat-label>
+                            <input matInput placeholder="CADUM" formControlName="cadum">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <mat-form-field appearance="outline" class="width-input">
+                            <mat-label>Produto</mat-label>
+                            <mat-select formControlName="product">
+                                <mat-option *ngFor="let item of allproducts" [value]="item.id">
+                                    {{item.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <mat-form-field appearance="outline" class="width-input">
+                            <mat-label>Quantidade</mat-label>
+                            <input matInput placeholder="Quantidade" type="number" formControlName="amount">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <button mat-raised-button class="my-2 " color="primary" type="submit" (click)="addProduct()">
+                            Adicionar
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="row">
+                <table mat-table [dataSource]="dataSource">
+
+                    <!-- CADUM do Produto Column -->
+                    <ng-container matColumnDef="cadum">
+                        <th mat-header-cell *matHeaderCellDef> CADUM </th>
+                        <td mat-cell *matCellDef="let element"> {{element.cadum}} </td>
+                    </ng-container>
+
+                    <!-- Nome do Produto Column -->
+                    <ng-container matColumnDef="nomeProduto">
+                        <th mat-header-cell *matHeaderCellDef> Nome do Produto </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ getProductById(element.id_product).name}}
+                        </td>
+                    </ng-container>
+
+                    <!-- Descrição do Produto Column -->
+                    <ng-container matColumnDef="descricaoProduto">
+                        <th mat-header-cell *matHeaderCellDef> Descrição do Produto </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ getProductById(element.id_product).description}}
+                        </td>
+                    </ng-container>
+
+                    <!-- Qtd. de Produtos Column -->
+                    <ng-container matColumnDef="qtdProdutos">
+                        <th mat-header-cell *matHeaderCellDef> Qtd. de Produtos </th>
+                        <td mat-cell *matCellDef="let element"> {{element.amount}} </td>
+                    </ng-container>
+
+                    <!-- Excluir Column -->
+                    <ng-container matColumnDef="excluir">
+                        <th mat-header-cell *matHeaderCellDef> Excluir </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-icon (click)="deleteProductSolicitation(element.id_product)">delete</mat-icon>
+                        </td>
+                    </ng-container>
+
+                    <!-- Editar Column -->
+                    <ng-container matColumnDef="editar">
+                        <th mat-header-cell *matHeaderCellDef> Editar </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-icon class="editButtonProduct" (click)="editProductSolicitation(element.id_product)">
+                                edit</mat-icon>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+
+                <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+            </div>
+
+            <div class="row">
+
+                <!-- <div class="col-sm-2"> -->
+                <button mat-raised-button class="my-2 px-5 ml-auto" color="primary" type="submit" (click)="sendRequest()">
+                    Solicitar
+                </button>
+                <!-- </div> -->
+            </div>
+
+        </form>
+    </div>
+</mat-card>

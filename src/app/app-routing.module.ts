@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MyRequestsComponent } from './authenticated/my-requests/my-requests.component';
-import { ForgotThePasswordComponent } from './not-authenticated/forgot-the-password/forgot-the-password.component';
-import { LoginComponent } from './not-authenticated/login/login.component';
+import { MyRequestsComponent } from './authenticated/my-requests/view-requests/my-requests.component';
 
 const routes: Routes = [
     {
@@ -24,7 +22,8 @@ const routes: Routes = [
     },
     {
         path: 'request',
-        component: MyRequestsComponent
+        loadChildren: () => import('./authenticated/my-requests/request.module').then(m => m.RequestModule)
+
     }
     // {
     //     path: 'operator',

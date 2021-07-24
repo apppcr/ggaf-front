@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
             const emailInput = this.loginFormGroup.get('email').value;
             const passwordInput = this.loginFormGroup.get('password').value;
 
-            this.router.navigate(['request']);
+            this.router.navigate(['/request/view']);
         }
     }
 
