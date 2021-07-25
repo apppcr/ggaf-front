@@ -35,8 +35,10 @@ export class LoginComponent implements OnInit {
 
             this.userService.findUserByEmail(emailInput)
                 .subscribe((result) => {
-                    localStorage.setItem('currentUser', JSON.stringify(result[0]));
-                    this.router.navigate(['/request/view']);
+                    if (result.length > 0) {
+                        localStorage.setItem('currentUser', JSON.stringify(result[0]));
+                        this.router.navigate(['/request/view']);
+                    }
                 });
         }
     }

@@ -15,18 +15,27 @@ export class ProductSolicitationService {
     constructor(private requestService: RequestService) { }
 
     findAllProductSolicitation(): Observable<any> {
-        return this.requestService.Get(`${environment.apiEndpoint.api}/product-solicitation/findAllProductSolicitation`);
+        return this.requestService
+            .Get(`${environment.apiEndpoint.api}/product-solicitation/findAllProductSolicitation`);
     }
 
-    createProductSolicitation(productSolicitation: ProductSolicitation) {
-        return this.requestService.Post(`${environment.apiEndpoint.api}/product-solicitation/createProductSolicitation`, productSolicitation);
+    findProductSolicitationById(id: number): Observable<any> {
+        return this.requestService
+            .Get(`${environment.apiEndpoint.api}/product-solicitation/findProductSolicitationById/${id}`);
+    }
+
+    createProductSolicitation(productSolicitation: ProductSolicitation[]) {
+        return this.requestService
+            .Post(`${environment.apiEndpoint.api}/product-solicitation/createProductSolicitation`, productSolicitation);
     }
 
     updateProductSolicitation(productSolicitation: ProductSolicitation, id: string) {
-        return this.requestService.Post(`${environment.apiEndpoint.api}/product-solicitation/updateProductSolicitation/${id}`, productSolicitation);
+        return this.requestService
+            .Post(`${environment.apiEndpoint.api}/product-solicitation/updateProductSolicitation/${id}`, productSolicitation);
     }
 
     deleteProductSolicitation(id: string): Observable<any> {
-        return this.requestService.Delete(`${environment.apiEndpoint.api}/product-solicitation/deleteProductSolicitation/${id}`);
+        return this.requestService
+            .Delete(`${environment.apiEndpoint.api}/product-solicitation/deleteProductSolicitation/${id}`);
     }
 }

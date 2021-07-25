@@ -1,0 +1,110 @@
+<h1>{{request_number}} - Dados da Solicitação</h1>
+<mat-dialog-content class="mat-typography">
+    <div class="row">
+        <div class="col-sm-12">
+            Almoxarifado: {{nameWarehouse}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            Status: {{status}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            Data: {{date_request | date:'dd/MM/yyyy HH:mm:ss'}}
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-4">
+            Matrícula: {{registration}}
+        </div>
+
+        <div class="col-sm-6">
+            Solicitante: {{requester}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            E-mail: {{email}}
+        </div>
+    </div>
+
+    <hr>
+    <div class="row">
+        <div class="col-sm-3">
+            CEP: {{cep}}
+        </div>
+
+        <div class="col-sm-7">
+            Rua: {{address}}
+        </div>
+
+        <div class="col-sm-2">
+            N.: {{number}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            Bairro: {{district}}
+        </div>
+
+        <div class="col-sm-4">
+            Cidade: {{city}}
+        </div>
+
+        <div class="col-sm-4">
+            Estado: {{state}}
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <table mat-table [dataSource]="dataSource">
+
+            <!-- CADUM do Produto Column -->
+            <ng-container matColumnDef="cadum">
+                <th mat-header-cell *matHeaderCellDef> CADUM </th>
+                <td mat-cell *matCellDef="let element"> {{element.cadum}} </td>
+            </ng-container>
+
+            <!-- Nome do Produto Column -->
+            <ng-container matColumnDef="nomeProduto">
+                <th mat-header-cell *matHeaderCellDef> Nome do Produto </th>
+                <td mat-cell *matCellDef="let element">
+                    {{ getProductById(element.id_product).name}}
+                </td>
+            </ng-container>
+
+            <!-- Descrição do Produto Column -->
+            <ng-container matColumnDef="descricaoProduto">
+                <th mat-header-cell *matHeaderCellDef> Descrição do Produto </th>
+                <td mat-cell *matCellDef="let element">
+                    {{ getProductById(element.id_product).description}}
+                </td>
+            </ng-container>
+
+            <!-- Qtd. de Produtos Column -->
+            <ng-container matColumnDef="qtdProdutos">
+                <th mat-header-cell *matHeaderCellDef> Qtd. de Produtos </th>
+                <td mat-cell *matCellDef="let element"> {{element.amount}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator align="end" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+
+
+
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Fechar</button>
+</mat-dialog-actions>

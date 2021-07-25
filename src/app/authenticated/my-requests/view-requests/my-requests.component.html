@@ -48,7 +48,7 @@
 
                 <ng-container matColumnDef="verPedido">
                     <th mat-header-cell *matHeaderCellDef> </th>
-                    <td mat-cell *matCellDef="let element"><button mat-raised-button color="warn" (click)="openDialogNewRequest()">Ver Pedido</button></td>
+                    <td mat-cell *matCellDef="let element"><button mat-raised-button color="warn" (click)="openDialogView(element.id)">Ver Pedido</button></td>
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

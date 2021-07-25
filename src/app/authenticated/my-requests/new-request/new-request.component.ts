@@ -1,4 +1,4 @@
-
+import { Router } from '@angular/router';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
@@ -23,6 +23,7 @@ import { ProfileService } from './../../../shared/services/profile.service';
 import { ProductService } from './../../../shared/services/product.service';
 import { WharehouseService } from './../../../shared/services/wharehouse.service';
 import { SolicitationService } from './../../../shared/services/solicitation.service';
+import { ProductSolicitationService } from './../../../shared/services/product-solicitation.service';
 
 
 @Component({
@@ -50,12 +51,14 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
     constructor(
         private formBuilder: FormBuilder,
         private viacep: NgxViacepService,
+        private router: Router,
 
         private userService: UserService,
         private profileService: ProfileService,
         private productService: ProductService,
         private wharehouseService: WharehouseService,
         private solicitationService: SolicitationService,
+        private productSolicitationService: ProductSolicitationService
     ) { }
 
     ngAfterViewInit() {
@@ -77,7 +80,7 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
             state: ['', Validators.required],
             complement: [''],
             district: ['', Validators.required],
-            wharehouse: ['0', Validators.required],
+            wharehouse: ['', Validators.required],
             solicitationCurrenteUser: [2, Validators.required],
         });
 
@@ -93,7 +96,6 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
             this.userService.findUserByEmail(this.currentUser.email),
             this.wharehouseService.findAllWharehouse()
         ]).subscribe((result) => {
-            console.log(result);
             if (result[0].length > 0) {
                 this.allproducts = result[0];
             }
@@ -153,15 +155,23 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
         this.dataSource.data = this.productSolicitationSelected;
     }
 
-    sendRequest(): void {
-        // if (this.formAddProductGroup.valid) {
+    ruleToSaveRequest(): void {
+        this.removeRequeridValidator();
 
+        if (this.formAddProductGroup.valid && this.productSolicitationSelected.length > 0) {
+            this.saveRequest();
+        } else if (this.formAddProductGroup.valid && this.productSolicitationSelected.length === 0) {
+            alert('Favor adicionar pelo menos um produto');
+        }
+    }
+
+    saveRequest(): void {
         const solicitation: Solicitation = {
             requester: this.formRequestGroup.get('requester').value,
             registration: this.formRequestGroup.get('registration').value,
             date_request: new Date(),
             request_number: 'CRIAR LÓGICA', //Alterar
-            email: this.formRequestGroup.get('registration').value,
+            email: this.formRequestGroup.get('email').value,
 
             address: this.formRequestGroup.get('address').value,
             number: parseInt(this.formRequestGroup.get('number').value, 10),
@@ -175,18 +185,31 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
 
             id_secretary: this.currentUser.id_secretary,
             id_warehouse: parseInt(this.formRequestGroup.get('wharehouse').value, 10),
-            operator: this.currentUser.email,
-            
-            productSolicitation: this.productSolicitationSelected
+            operator: this.currentUser.email
         }
-
-        console.log(solicitation);
 
         this.solicitationService.createSolicitation(solicitation)
             .subscribe(result => {
-                console.log('Salvou ', result)
+                this.productSolicitationSelected.map(pss => {
+                    pss.id_solicitation = result.id
+                    return pss;
+                });
+
+                this.productSolicitationService
+                    .createProductSolicitation(this.productSolicitationSelected)
+                    .subscribe(result => {
+                        alert('Salvo com sucesso!');
+                        this.router.navigate(['/request/view']);
+                    });
             });
-        // }
+    }
+
+    removeRequeridValidator(): void {
+        const inputs = ['cadum', 'amount', 'product'];
+        inputs.forEach(item => {
+            this.formAddProductGroup.get(item).setValidators([]);
+            this.formAddProductGroup.get(item).updateValueAndValidity();
+        });
     }
 
     searchCep(): void {

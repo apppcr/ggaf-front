@@ -5,16 +5,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import 'rxjs/add/observable/forkJoin';
 
-import { DialogNewRequestComponent } from './../dialog/dialog-new-request/dialog-new-request.component';
-import { DialogTypeUserComponent } from './../dialog/dialog-type-user/dialog-type-user.component';
-
 import { SolicitationService } from './../../../shared/services/solicitation.service';
 import { WharehouseService } from './../../../shared/services/wharehouse.service';
 import { SecretaryService } from './../../../shared/services/secretary.service';
 
 import { Solicitation } from '../../../core/models/solicitation.model';
-import { Secretary } from '../../../core/models/secretary.model';
 import { Wharehouse } from '../../../core/models/wharehouse.model';
+import { Secretary } from '../../../core/models/secretary.model';
+
+import {
+    DialogViewSolicitationComponent
+} from '../dialog/dialog-view-solicitation/dialog-view-solicitation.component';
 
 @Component({
     selector: 'app-my-requests',
@@ -62,16 +63,13 @@ export class MyRequestsComponent implements OnInit {
 
     }
 
-    openDialog() {
-        const dialogRef = this.dialog.open(DialogTypeUserComponent);
-
-        dialogRef.afterClosed().subscribe(result => {
-            console.log(`Dialog result: ${result}`);
+    openDialogView(id: number) {
+        const dialogRef = this.dialog.open(DialogViewSolicitationComponent, {
+            width: '800px',
+            data: {
+                idSolicitation: id
+            }
         });
-    }
-
-    openDialogNewRequest() {
-        const dialogRef = this.dialog.open(DialogNewRequestComponent);
 
         dialogRef.afterClosed().subscribe(result => {
             console.log(`Dialog result: ${result}`);
