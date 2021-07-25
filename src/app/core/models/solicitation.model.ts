@@ -1,3 +1,4 @@
+import { ProductSolicitation } from './product-solicitation.model';
 export interface Solicitation {
     id?: number;
     requester: string;
@@ -16,4 +17,6 @@ export interface Solicitation {
     operator?: string;
     zip_code?: string;
     district?: string;
+
+    productSolicitation?: ProductSolicitation[];
 }

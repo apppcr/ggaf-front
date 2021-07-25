@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -14,7 +15,6 @@ import { SecretaryService } from './../../../shared/services/secretary.service';
 import { Solicitation } from '../../../core/models/solicitation.model';
 import { Secretary } from '../../../core/models/secretary.model';
 import { Wharehouse } from '../../../core/models/wharehouse.model';
-import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-my-requests',
@@ -48,17 +48,14 @@ export class MyRequestsComponent implements OnInit {
             if (result[0].length > 0) {
                 this.allSocitation = result[0];
                 this.dataSource = this.allSocitation;
-                console.log(this.allSocitation);
             }
 
             if (result[1].length > 0) {
                 this.allSecretary = result[1];
-                console.log(this.allSecretary);
             }
 
             if (result[2].length > 0) {
                 this.allWharehouse = result[2];
-                console.log(this.allWharehouse);
             }
 
         });
@@ -82,7 +79,7 @@ export class MyRequestsComponent implements OnInit {
     }
 
     newSocicitation(): void {
-       this.router.navigate(['request/new'])
+        this.router.navigate(['request/new'])
     }
 
 }

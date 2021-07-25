@@ -14,9 +14,15 @@
 
         <div class="content-box">
 
-            <button mat-raised-button color="primary" (click)="newSocicitation()">Nova Requisição</button>
+            <div class="row mr-1">
 
-            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                <button mat-raised-button class="my-2 px-5 ml-auto" color="primary" type="submit" (click)="newSocicitation()">
+                    Nova Requisição
+                </button>
+
+            </div>
+
+            <table mat-table [dataSource]="dataSource">
 
                 <ng-container matColumnDef="numeroSolicitacao">
                     <th mat-header-cell *matHeaderCellDef> Número da Solicitação. </th>

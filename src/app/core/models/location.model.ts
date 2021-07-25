@@ -1,11 +1,13 @@
 export interface Location {
     id?: number;
-    nome?: string;
+    name: string;
     local: string;
     address: string;
-    zip_code: string;
-    city: string;
-    name: string;
-    state: string;
+    number?: Number;
+    city?: string;
+    state?: string;
+    zip_code?: string;
+    district?: string;
+    complement?: string;
     operator?: string;
 }

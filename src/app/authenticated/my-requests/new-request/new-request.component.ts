@@ -1,13 +1,9 @@
+
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatDialog } from '@angular/material/dialog';
-import { EMPTY, Observable } from 'rxjs';
-
 import { MatPaginator } from '@angular/material/paginator';
-import { Product } from 'src/app/core/models/product.model';
-import { ProductService } from './../../../shared/services/product.service';
-import { ProductSolicitation } from 'src/app/core/models/product-solicitation.model';
+import { EMPTY, Observable } from 'rxjs';
 
 import {
     NgxViacepService,
@@ -15,6 +11,19 @@ import {
     CEPError,
 } from "@brunoc/ngx-viacep";
 import { catchError } from 'rxjs/operators';
+
+import { User } from '../../../core/models/user.model';
+import { Product } from '../../../core/models/product.model';
+import { Wharehouse } from '../../../core/models/wharehouse.model';
+import { Solicitation } from '../../../core/models/solicitation.model';
+import { ProductSolicitation } from '../../../core/models/product-solicitation.model';
+
+import { UserService } from './../../../shared/services/user.service';
+import { ProfileService } from './../../../shared/services/profile.service';
+import { ProductService } from './../../../shared/services/product.service';
+import { WharehouseService } from './../../../shared/services/wharehouse.service';
+import { SolicitationService } from './../../../shared/services/solicitation.service';
+
 
 @Component({
     selector: 'app-new-request',
@@ -25,21 +34,28 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
 
     displayedColumns: string[] = ['cadum', 'nomeProduto', 'descricaoProduto', 'qtdProdutos', 'excluir', 'editar'];
     dataSource = new MatTableDataSource<ProductSolicitation>();
-
     @ViewChild(MatPaginator) paginator: MatPaginator;
-
-    allproducts: Product[] = [];
-
-    productSolicitationSelected: ProductSolicitation[] = [];
 
     formRequestGroup: FormGroup;
     formAddProductGroup: FormGroup;
 
+    allWharehouse: Wharehouse[] = [];
+    allproducts: Product[] = [];
+    currentUser: User;
+    currentEmail = '';
+    isHideForm: boolean;
+
+    productSolicitationSelected: ProductSolicitation[] = [];
+
     constructor(
-        public dialog: MatDialog,
         private formBuilder: FormBuilder,
+        private viacep: NgxViacepService,
+
+        private userService: UserService,
+        private profileService: ProfileService,
         private productService: ProductService,
-        private viacep: NgxViacepService
+        private wharehouseService: WharehouseService,
+        private solicitationService: SolicitationService,
     ) { }
 
     ngAfterViewInit() {
@@ -47,18 +63,22 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
+        this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
         this.formRequestGroup = this.formBuilder.group({
             registration: ['', Validators.required],
             requester: ['', Validators.required],
-            email: ['', Validators.required, Validators.email],
+            email: ['', [Validators.required, Validators.email]],
             requestDate: [Validators.required],
-            zipCode: ['', Validators.required],
+            zipCode: ['', [Validators.required, Validators.maxLength(9)]],
             address: ['', Validators.required],
-            number: [0, Validators.required],
+            number: ['', Validators.required],
             city: ['', Validators.required],
             state: ['', Validators.required],
             complement: [''],
             district: ['', Validators.required],
+            wharehouse: ['0', Validators.required],
+            solicitationCurrenteUser: [2, Validators.required],
         });
 
         this.formAddProductGroup = this.formBuilder.group({
@@ -68,11 +88,22 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
         });
 
         Observable.forkJoin([
-            this.productService.getAllProduct()
+            this.productService.getAllProduct(),
+            this.profileService.findAllProfile(),
+            this.userService.findUserByEmail(this.currentUser.email),
+            this.wharehouseService.findAllWharehouse()
         ]).subscribe((result) => {
+            console.log(result);
             if (result[0].length > 0) {
                 this.allproducts = result[0];
-                console.log(this.allproducts);
+            }
+
+            if (result[2].length > 0) {
+                this.currentUser = result[2][0];
+            }
+
+            if (result[3].length > 0) {
+                this.allWharehouse = result[3];
             }
         });
     }
@@ -123,33 +154,46 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
     }
 
     sendRequest(): void {
-        if (this.formAddProductGroup.valid) {
-            // const solicitation: Solicitation = {
-            //     id?: number;
-            //     requester: string;
-            //     registration: string;
-            //     date_request: Date;
-            //     request_number: string;
-            //     email: string;
-            //     address: string;
-            //     number: number;
-            //     city: string;
-            //     state: string;
-            //     complement: string;
-            //     id_secretary: number;
-            //     status: string;
-            //     id_warehouse: number;
-            //     operator?: string;
-            // }
+        // if (this.formAddProductGroup.valid) {
+
+        const solicitation: Solicitation = {
+            requester: this.formRequestGroup.get('requester').value,
+            registration: this.formRequestGroup.get('registration').value,
+            date_request: new Date(),
+            request_number: 'CRIAR LÓGICA', //Alterar
+            email: this.formRequestGroup.get('registration').value,
+
+            address: this.formRequestGroup.get('address').value,
+            number: parseInt(this.formRequestGroup.get('number').value, 10),
+            city: this.formRequestGroup.get('city').value,
+            state: this.formRequestGroup.get('state').value,
+            zip_code: this.formRequestGroup.get('zipCode').value,
+            district: this.formRequestGroup.get('district').value,
+            complement: this.formRequestGroup.get('complement').value,
+
+            status: 'ESCOLHA',
+
+            id_secretary: this.currentUser.id_secretary,
+            id_warehouse: parseInt(this.formRequestGroup.get('wharehouse').value, 10),
+            operator: this.currentUser.email,
+            
+            productSolicitation: this.productSolicitationSelected
         }
+
+        console.log(solicitation);
+
+        this.solicitationService.createSolicitation(solicitation)
+            .subscribe(result => {
+                console.log('Salvou ', result)
+            });
+        // }
     }
 
     searchCep(): void {
-        console.log("pegou");
-        // const cep =
-        const cep = '52071544';
+        const cep = this.formRequestGroup.get('zipCode').value;
+
         this.viacep
-            .buscarPorCep(cep)
+            .buscarPorCep(cep.replace('-', ''))
             .pipe(
                 catchError((error: CEPError) => {
                     // Ocorreu algum erro :/
@@ -158,9 +202,6 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
                 })
             )
             .subscribe((endereco: Endereco) => {
-                // Endereço retornado :)
-                console.log(endereco);
-
                 this.formRequestGroup.get('address').disable();
                 this.formRequestGroup.get('district').disable();
                 this.formRequestGroup.get('city').disable();
@@ -172,5 +213,19 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
                 this.formRequestGroup.get('state').setValue(endereco.uf);
             });
 
+    }
+
+    onClickCheck(event: any): void {
+        if (event.value === "1") {
+            const currentUser: User = JSON.parse(localStorage.getItem('currentUser'));
+
+            this.formRequestGroup.get('requester').setValue(currentUser.name);
+            this.formRequestGroup.get('registration').setValue(currentUser.registration);
+            this.formRequestGroup.get('email').setValue(currentUser.email);
+        } else {
+            this.formRequestGroup.get('requester').setValue('');
+            this.formRequestGroup.get('registration').setValue('');
+            this.formRequestGroup.get('email').setValue('');
+        }
     }
 }

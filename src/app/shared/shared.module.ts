@@ -36,6 +36,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { BrMaskerModule } from 'br-mask';
 
 
 @NgModule({
@@ -79,6 +80,8 @@ import { FooterComponent } from './components/footer/footer.component';
         MatSortModule,
         MatPaginatorModule,
         MatBadgeModule,
+
+        BrMaskerModule
     ],
     exports: [
         MatCheckboxModule,
@@ -120,6 +123,8 @@ import { FooterComponent } from './components/footer/footer.component';
         NavBarComponent,
         HeaderComponent,
         FooterComponent,
+
+        BrMaskerModule
     ],
 })
 export class SharedModule { }

@@ -18,6 +18,10 @@ export class UserService {
         return this.requestService.Get(`${environment.apiEndpoint.api}/user/findAllUser`);
     }
 
+    findUserByEmail(currentEmail: string) {
+        return this.requestService.Get(`${environment.apiEndpoint.api}/user/findUserByEmail/${currentEmail}`);
+    }
+
     createUser(user: User) {
         return this.requestService.Post(`${environment.apiEndpoint.api}/user/createUser`, user);
     }
