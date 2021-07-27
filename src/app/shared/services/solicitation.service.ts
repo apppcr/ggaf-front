@@ -22,6 +22,10 @@ export class SolicitationService {
         return this.requestService.Get(`${environment.apiEndpoint.api}/solicitation/findSolicitationById/${id}`);
     }
 
+    findSolicitationByEmail(email: string): Observable<any> {
+        return this.requestService.Get(`${environment.apiEndpoint.api}/solicitation/findSolicitationByEmail/${email}`);
+    }
+
     createSolicitation(solicitation: Solicitation) {
         return this.requestService.Post(`${environment.apiEndpoint.api}/solicitation/createSolicitation`, solicitation);
     }

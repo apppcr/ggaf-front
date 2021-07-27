@@ -12,10 +12,12 @@ import { SecretaryService } from './../../../shared/services/secretary.service';
 import { Solicitation } from '../../../core/models/solicitation.model';
 import { Wharehouse } from '../../../core/models/wharehouse.model';
 import { Secretary } from '../../../core/models/secretary.model';
+import { User } from '../../../core/models/user.model';
 
 import {
     DialogViewSolicitationComponent
 } from '../dialog/dialog-view-solicitation/dialog-view-solicitation.component';
+
 
 @Component({
     selector: 'app-my-requests',
@@ -31,6 +33,8 @@ export class MyRequestsComponent implements OnInit {
     allSecretary: Secretary[];
     allWharehouse: Wharehouse[];
 
+    currentUser: User;
+
     constructor(
         private router: Router,
         private dialog: MatDialog,
@@ -40,8 +44,10 @@ export class MyRequestsComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
         Observable.forkJoin([
-            this.solicitationService.findAllSolicitation(),
+            this.solicitationService.findSolicitationByEmail(this.currentUser.email),
             this.SecretaryService.findAllSecretary(),
             this.wharehouseService.findAllWharehouse()
         ]).subscribe((result) => {
