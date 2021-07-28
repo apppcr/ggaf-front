@@ -4,7 +4,7 @@ export interface Solicitation {
     requester: string;
     registration: string;
     date_request: Date;
-    request_number: string;
+    request_number?: string;
     email: string;
     address: string;
     number: number;
@@ -13,7 +13,7 @@ export interface Solicitation {
     complement: string;
     id_secretary: number;
     status: string;
-    id_warehouse: number;
+    id_warehouse?: number;
     operator?: string;
     zip_code?: string;
     district?: string;

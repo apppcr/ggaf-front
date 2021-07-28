@@ -22,7 +22,6 @@ export class DialogViewSolicitationComponent implements OnInit {
     currentSolicitation: Solicitation;
     currentProductSolicitation: ProductSolicitation;
 
-    nameWarehouse = 0;
     address = '';
     city = '';
     complement = '';
@@ -66,7 +65,6 @@ export class DialogViewSolicitationComponent implements OnInit {
 
             if (result[0].length > 0) {
                 this.currentSolicitation = result[0][0];
-                this.nameWarehouse = this.currentSolicitation.id_warehouse;
                 this.address = this.currentSolicitation.address;
                 this.city = this.currentSolicitation.city;
                 this.complement = this.currentSolicitation.complement;
@@ -90,10 +88,6 @@ export class DialogViewSolicitationComponent implements OnInit {
                 this.allproducts = result[2];
             }
         });
-    }
-
-    get(): void {
-
     }
 
     getProductById(id: number): Product {

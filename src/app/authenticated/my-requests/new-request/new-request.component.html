@@ -1,21 +1,7 @@
 <mat-card>
     <div class="container">
 
-        <form [formGroup]="formRequestGroup">
-            <h1>Almoxarifado</h1>
-            <div class="row">
-                <div class="col-sm-12">
-                    <mat-form-field appearance="outline" class="width-input">
-                        <mat-label>Almoxarifado</mat-label>
-                        <mat-select formControlName="wharehouse">
-                            <mat-option *ngFor="let item of allWharehouse" [value]="item.id">
-                                {{item.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
-
+        <form [formGroup]="formRequestGroup" class="my-5">
             <h1>Solicitante</h1>
 
             <div class="row">
@@ -35,6 +21,16 @@
             <br>
 
             <div class="row">
+                <div class="col-sm-12">
+                    <mat-form-field appearance="outline" class="width-input">
+                        <mat-label>Solicitante</mat-label>
+                        <input matInput placeholder="Solicitante" formControlName="requester">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+
                 <div class="col-sm-4">
                     <mat-form-field appearance="outline" class="width-input">
                         <mat-label>Matrícula</mat-label>
@@ -44,24 +40,8 @@
 
                 <div class="col-sm-8">
                     <mat-form-field appearance="outline" class="width-input">
-                        <mat-label>Solicitante</mat-label>
-                        <input matInput placeholder="Solicitante" formControlName="requester">
-                    </mat-form-field>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-6">
-                    <mat-form-field appearance="outline" class="width-input">
                         <mat-label>E-mail</mat-label>
                         <input matInput placeholder="E-mail" formControlName="email">
-                    </mat-form-field>
-                </div>
-
-                <div class="col-sm-6">
-                    <mat-form-field appearance="outline" class="width-input">
-                        <mat-label>Data da Solicitação</mat-label>
-                        <input matInput type="date" formControlName="requestDate">
                     </mat-form-field>
                 </div>
             </div>

@@ -1,9 +1,38 @@
 <header>
-    <div class="container-fluid body-app">
+    <nav class="container-fluid body-app menu">
         <div class="row header-bar">
-            <div class="col-sm-12">
+            <div class="col-sm-1">
                 <img src="../../assets/img/logo_pcr.png" width="60px" alt="Prefeitura da Cidade do Recife">
             </div>
+            <div class="col-sm-11" *ngIf="isLogged">
+                <ul>
+                    <li>
+                        <button mat-button routerLink="request/view">
+                            <mat-icon>home</mat-icon>
+                            Minhas requisições
+                        </button>
+                    </li>
+                    <li *ngIf="idAdmin">
+                        <button mat-button [matMenuTriggerFor]="afterMenu">
+                            <mat-icon>admin_panel_settings</mat-icon>
+                            Administração
+                        </button>
+                        <mat-menu #afterMenu="matMenu" xPosition="after">
+                            <div *ngFor="let menu of menuAdministration">
+                                <button mat-menu-item [routerLink]="menu.link">
+                                    {{menu.label}}
+                                </button>
+                            </div>
+                        </mat-menu>
+                    </li>
+                    <li>
+                        <button mat-button class="btn-log-off" (click)="logOff()">
+                            <mat-icon>logout</mat-icon>
+                            Sair
+                        </button>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
+    </nav>
 </header>

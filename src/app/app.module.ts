@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -34,7 +35,8 @@ import { AdministratorModule } from './authenticated/administrator/administrator
         OperatorModule,
         RequestModule,
 
-        HttpClientModule
+        HttpClientModule,
+        RouterModule
     ],
     providers: [],
     bootstrap: [AppComponent]
