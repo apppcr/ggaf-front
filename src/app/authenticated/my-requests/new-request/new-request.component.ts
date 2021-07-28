@@ -56,7 +56,6 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
         private userService: UserService,
         private profileService: ProfileService,
         private productService: ProductService,
-        private wharehouseService: WharehouseService,
         private solicitationService: SolicitationService,
         private productSolicitationService: ProductSolicitationService
     ) { }
@@ -93,8 +92,7 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
         Observable.forkJoin([
             this.productService.getAllProduct(),
             this.profileService.findAllProfile(),
-            this.userService.findUserByEmail(this.currentUser.email),
-            this.wharehouseService.findAllWharehouse()
+            this.userService.findUserByEmail(this.currentUser.email)
         ]).subscribe((result) => {
             if (result[0].length > 0) {
                 this.allproducts = result[0];
@@ -102,10 +100,6 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
 
             if (result[2].length > 0) {
                 this.currentUser = result[2][0];
-            }
-
-            if (result[3].length > 0) {
-                this.allWharehouse = result[3];
             }
         });
     }
@@ -170,7 +164,7 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
             requester: this.formRequestGroup.get('requester').value,
             registration: this.formRequestGroup.get('registration').value,
             date_request: new Date(),
-            request_number: 'CRIAR LÓGICA', //Alterar
+            request_number: 'N/A', //Alterar
             email: this.formRequestGroup.get('email').value,
 
             address: this.formRequestGroup.get('address').value,
@@ -181,10 +175,9 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
             district: this.formRequestGroup.get('district').value,
             complement: this.formRequestGroup.get('complement').value,
 
-            status: 'ESCOLHA',
+            status: 'Aberta',
 
             id_secretary: this.currentUser.id_secretary,
-            id_warehouse: parseInt(this.formRequestGroup.get('wharehouse').value, 10),
             operator: this.currentUser.email
         }
 

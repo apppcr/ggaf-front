@@ -1,6 +1,6 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { User } from '../../core/models/user.model';
 import { environment } from './../../../environments/environment';
@@ -12,6 +12,8 @@ import { RequestService } from './request.service';
 export class UserService {
 
     private options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    private userLoggedInUserAndProfile = new BehaviorSubject<any>(undefined);
+
     constructor(private requestService: RequestService) { }
 
     findAllUser(): Observable<any> {
@@ -32,5 +34,13 @@ export class UserService {
 
     deleteUser(id: string): Observable<any> {
         return this.requestService.Delete(`${environment.apiEndpoint.api}/user/deleteUser/${id}`);
+    }
+
+    setLoggedInUserAndProfile(user: any): void {
+        this.userLoggedInUserAndProfile.next(user);
+    }
+
+    getLoggedInUserAndProfile(): Observable<any> {
+        return this.userLoggedInUserAndProfile.asObservable();
     }
 }

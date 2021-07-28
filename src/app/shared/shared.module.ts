@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
@@ -81,7 +82,9 @@ import { BrMaskerModule } from 'br-mask';
         MatPaginatorModule,
         MatBadgeModule,
 
-        BrMaskerModule
+        BrMaskerModule,
+
+        RouterModule
     ],
     exports: [
         MatCheckboxModule,
@@ -124,7 +127,8 @@ import { BrMaskerModule } from 'br-mask';
         HeaderComponent,
         FooterComponent,
 
-        BrMaskerModule
+        BrMaskerModule,
+        RouterModule
     ],
 })
 export class SharedModule { }
