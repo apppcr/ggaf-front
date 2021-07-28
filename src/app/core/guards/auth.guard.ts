@@ -22,10 +22,11 @@ export class AuthGuard implements CanActivate {
         state: RouterStateSnapshot
     ): Observable<boolean> | boolean {
         const userInfo = JSON.parse(localStorage.getItem('currentUser'));
-
+        
         if (!userInfo) {
             this.router.navigate(['/']);
         }
+        
         return true;
 
     }

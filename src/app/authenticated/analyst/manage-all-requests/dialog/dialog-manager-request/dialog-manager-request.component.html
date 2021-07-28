@@ -1,37 +1,60 @@
-<h2 mat-dialog-title>Gerenciar Requisição</h2>
+<h1 mat-dialog-title>Gerenciar Requisição - {{request_number}}</h1>
 <mat-dialog-content class="mat-typography">
-
+    <hr>
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <h4>Selecione o Almoxarifado:</h4>
+                Status: {{status}}
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <section class="example-section" [formGroup]="almoxarifados">
-                    <p>
-                        <mat-checkbox formControlName="expediente">Expediente</mat-checkbox>
-                    </p>
-                    <p>
-                        <mat-checkbox formControlName="alimentacao">Alimentação</mat-checkbox>
-                    </p>
-                    <p>
-                        <mat-checkbox formControlName="higieneLimpeza">Higiene e Limpeza</mat-checkbox>
-                    </p>
-                    <p>
-                        <mat-checkbox formControlName="patrimonio">Patrimônio</mat-checkbox>
-                    </p>
-                    <p>
-                        <mat-checkbox formControlName="informatica">Informática</mat-checkbox>
-                    </p>
-                </section>
+                Data: {{date_request | date:'dd/MM/yyyy HH:mm:ss'}}
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                Matrícula: {{registration}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                Solicitante: {{requester}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                E-mail: {{email}}
+            </div>
+        </div>
+
+        <br>
+
+        <form [formGroup]="formManager">
+
+            <div class="row">
+                <p>Você deseja encaminhar, está solicitação para o almoxarifado:</p>
+                <div class="col-sm-12">
+                    <mat-form-field appearance="outline" class="width-input">
+                        <mat-label>Selecione o Almoxarifado</mat-label>
+                        <mat-select formControlName="wharehouse">
+                            <mat-option *ngFor="let item of allWharehouse" [value]="item.id">
+                                {{item.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <mat-dialog-actions align="end">
+                <button mat-button mat-dialog-close>Cancelar</button>
+                <button type="submit" mat-button cdkFocusInitial (click)="forwardRequest()">Encaminhar</button>
+            </mat-dialog-actions>
+
+        </form>
+
     </div>
 
+
 </mat-dialog-content>
-<mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Cancelar</button>
-    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Encaminhar</button>
-</mat-dialog-actions>

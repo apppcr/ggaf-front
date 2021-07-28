@@ -3,69 +3,69 @@
     <div class="container-box">
         <div class="row">
 
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 <h3 class="title-box">Gerenciar Requisições</h3>
-            </div>
-
-            <div class="col-sm-6 text-right">
             </div>
 
         </div>
 
         <div class="content-box">
 
-            <div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Secretaria</mat-label>
-                            <mat-select>
-                                <mat-option *ngFor="let secretaria of todasSecretarias" [value]="secretaria.id">
-                                    {{secretaria.name}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Local</mat-label>
-                            <mat-select>
-                                <mat-option *ngFor="let local of todosLocais" [value]="local.id">
-                                    {{local.name}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Solicitante</mat-label>
-                            <mat-select>
-                                <mat-option *ngFor="let solicitante of todosSolicitantes" [value]="solicitante.id">
-                                    {{solicitante.name}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Status</mat-label>
-                            <mat-select>
-                                <mat-option *ngFor="let onestatus of todosStatus" [value]="onestatus.value">
-                                    {{onestatus.viewValue}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Data da Solicitação</mat-label>
-                            <input type="date" matInput>
-                        </mat-form-field>
-                    </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Secretaria</mat-label>
+                        <mat-select>
+                            <mat-option *ngFor="let secretaria of allSecretary" [value]="secretaria.id">
+                                {{secretaria.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-2">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Local</mat-label>
+                        <mat-select>
+                            <mat-option *ngFor="let local of allLocation" [value]="local.id">
+                                {{local.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-2">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Solicitante</mat-label>
+                        <mat-select>
+                            <mat-option *ngFor="let solicitante of allSocitation" [value]="solicitante.requester">
+                                {{solicitante.requester}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-2">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Status</mat-label>
+                        <mat-select>
+                            <mat-option *ngFor="let onestatus of todosStatus" [value]="onestatus.value">
+                                {{onestatus.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-2">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Data da Solicitação</mat-label>
+                        <input type="date" matInput>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-2">
+                    <button mat-raised-button class="px-5 mt-2 btn-filter" color="primary" type="submit">
+                        Filtrar
+                    </button>
                 </div>
             </div>
 
-            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+            <table mat-table [dataSource]="dataSource">
 
                 <!--- Note that these columns can be defined in any order.
                   The actual rendered columns are set as a property on the row definition" -->
@@ -91,7 +91,7 @@
                 <!-- dataSolicitacao Column -->
                 <ng-container matColumnDef="dataSolicitacao">
                     <th mat-header-cell *matHeaderCellDef> Data da Solicitação </th>
-                    <td mat-cell *matCellDef="let element"> {{element.date_request}} </td>
+                    <td mat-cell *matCellDef="let element"> {{element.date_request | date:'dd/MM/yyyy HH:mm:ss'}} </td>
                 </ng-container>
 
                 <!-- status Column -->
@@ -103,19 +103,23 @@
                 <!-- pedidoPor Column -->
                 <ng-container matColumnDef="pedidoPor">
                     <th mat-header-cell *matHeaderCellDef> Pedido Por </th>
-                    <td mat-cell *matCellDef="let element"> {{element.registration}} </td>
+                    <td mat-cell *matCellDef="let element"> {{element.createdBy}} </td>
                 </ng-container>
 
                 <!-- verPedido Column -->
                 <ng-container matColumnDef="verPedido">
-                    <th mat-header-cell *matHeaderCellDef> </th>
-                    <td mat-cell *matCellDef="let element"><button mat-raised-button color="warn" (click)='openDialogViewRequest()'>Ver Pedido</button></td>
+                    <th mat-header-cell *matHeaderCellDef> Visualizar </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-raised-button color="warn" (click)='openDialogView(element.id)'>Ver Pedido</button>
+                    </td>
                 </ng-container>
 
                 <!-- gerenciarPedido Column -->
                 <ng-container matColumnDef="gerenciarPedido">
-                    <th mat-header-cell *matHeaderCellDef> </th>
-                    <td mat-cell *matCellDef="let element"><button mat-raised-button color="primary" (click)='openDialogManageRequest()'>Gerenciar</button></td>
+                    <th mat-header-cell *matHeaderCellDef> Gerenciar </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-raised-button color="primary" (click)='openDialogManageRequest(element.id)'>Gerenciar</button>
+                    </td>
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

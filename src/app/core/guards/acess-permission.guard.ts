@@ -26,9 +26,11 @@ export class AccessPermissionGuard implements CanActivate {
         state: RouterStateSnapshot
     ): Observable<boolean> | boolean {
         const userInfo: User = JSON.parse(localStorage.getItem('currentUser'));
+      
         this.userService.setLoggedInUserAndProfile(
             { isLogged: !!userInfo, idPerfil: userInfo.id_profile }
         );
+
         return !!userInfo;
     }
 }

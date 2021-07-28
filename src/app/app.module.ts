@@ -6,9 +6,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 
-import { DialogTypeUserComponent } from './authenticated/my-requests/dialog/dialog-type-user/dialog-type-user.component';
-import { DialogNewRequestComponent } from './authenticated/my-requests/dialog/dialog-new-request/dialog-new-request.component';
-
 import { SharedModule } from './shared/shared.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AnalystModule } from './authenticated/analyst/analyst.module';
@@ -20,9 +17,7 @@ import { AdministratorModule } from './authenticated/administrator/administrator
 
 @NgModule({
     declarations: [
-        AppComponent,
-        DialogTypeUserComponent,
-        DialogNewRequestComponent
+        AppComponent
     ],
     imports: [
         BrowserModule,

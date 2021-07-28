@@ -37,10 +37,22 @@ export class LoginComponent implements OnInit {
                 .subscribe((result) => {
                     if (result.length > 0) {
                         localStorage.setItem('currentUser', JSON.stringify(result[0]));
-                        this.router.navigate(['/request/view']);
+                        this.redirectByProfile(result[0].id_profile)
+                        // this.router.navigate(['/request/view']);
                     }
                 });
         }
+    }
+
+    redirectByProfile(currentIdProfile: number): void {
+        const routeByProfile = [
+            { idProfile: 1, link: '/request/view' },
+            { idProfile: 2, link: '/analyst/manage-all-requests' },
+        ];
+
+        const link = routeByProfile.find(x => x.idProfile === currentIdProfile).link
+        this.router.navigate([link]);
+
     }
 
     forgotThePassword(): void {

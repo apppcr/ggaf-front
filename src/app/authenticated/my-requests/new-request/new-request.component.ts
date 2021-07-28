@@ -173,12 +173,10 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
             zip_code: this.formRequestGroup.get('zipCode').value,
             district: this.formRequestGroup.get('district').value,
             complement: this.formRequestGroup.get('complement').value,
+            createdBy: this.currentUser.name,
 
             status: 'Aberto',
-            // Em Atendimento
-            // Aprovado
-            // Recusado
-
+ 
             id_secretary: this.currentUser.id_secretary,
             operator: this.currentUser.email
         }

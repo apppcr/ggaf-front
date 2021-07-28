@@ -17,6 +17,7 @@ export interface Solicitation {
     operator?: string;
     zip_code?: string;
     district?: string;
+    createdBy?: string;
 
     productSolicitation?: ProductSolicitation[];
 }
