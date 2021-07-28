@@ -164,7 +164,6 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
             requester: this.formRequestGroup.get('requester').value,
             registration: this.formRequestGroup.get('registration').value,
             date_request: new Date(),
-            request_number: 'N/A',
             email: this.formRequestGroup.get('email').value,
 
             address: this.formRequestGroup.get('address').value,

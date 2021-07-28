@@ -4,7 +4,7 @@ export interface Solicitation {
     requester: string;
     registration: string;
     date_request: Date;
-    request_number: string;
+    request_number?: string;
     email: string;
     address: string;
     number: number;
