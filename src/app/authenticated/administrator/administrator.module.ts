@@ -12,6 +12,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { NewCostCenterComponent } from './cost-center/dialog/new-cost-center/new-cost-center.component';
 import { NewProductComponent } from './product/dialog/new-product/new-product.component';
 import { NewSecretaryComponent } from './secretary/dialog/new-secretary/new-secretary.component';
+import { NewUserComponent } from './user/dialog/new-user/new-user.component';
 
 @NgModule({
     declarations: [
@@ -23,7 +24,8 @@ import { NewSecretaryComponent } from './secretary/dialog/new-secretary/new-secr
         WarehousesComponent,
         NewCostCenterComponent,
         NewProductComponent,
-        NewSecretaryComponent
+        NewSecretaryComponent,
+        NewUserComponent
     ],
     exports: [
         CostCenterComponent,

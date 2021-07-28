@@ -1,0 +1,77 @@
+<div class="container">
+
+    <form [formGroup]="formRequestGroup">
+
+        <h1>Novo Usuário</h1>
+
+        <br>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <mat-form-field appearance="outline" class="width-input">
+                    <mat-label>Matrícula</mat-label>
+                    <input matInput placeholder="Matrícula" formControlName="registration">
+                </mat-form-field>
+            </div>
+
+            <div class="col-sm-8">
+                <mat-form-field appearance="outline" class="width-input">
+                    <mat-label>E-mail</mat-label>
+                    <input matInput placeholder="E-mail" formControlName="email">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-form-field appearance="outline" class="width-input">
+                    <mat-label>Nome</mat-label>
+                    <input matInput placeholder="Nome" formControlName="name">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <mat-form-field appearance="outline" class="width-input">
+                    <mat-label>Telefone</mat-label>
+                    <input matInput placeholder="Telefone" formControlName="phone">
+                </mat-form-field>
+            </div>
+
+            <div class="col-sm-6">
+                <mat-form-field appearance="outline" class="width-input">
+                    <mat-label>CPF</mat-label>
+                    <input matInput placeholder="CPF" formControlName="cpf">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <mat-form-field appearance="outline" class="width-input">
+                    <mat-label>Local</mat-label>
+                    <input matInput placeholder="Local" formControlName="id_location">
+                </mat-form-field>
+            </div>
+
+            <div class="col-sm-6">
+                <mat-form-field appearance="outline" class="width-input">
+                    <mat-label>Secretaria</mat-label>
+                    <input matInput placeholder="Secretaria" formControlName="id_secretary">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <mat-form-field appearance="outline" class="width-input">
+                    <mat-label>Perfil</mat-label>
+                    <input matInput placeholder="Perfil" formControlName="operator">
+                </mat-form-field>
+            </div>
+        </div>
+
+
+    </form>
+</div>
