@@ -4,7 +4,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+
 import { AppComponent } from './app.component';
+import { environment } from './../environments/environment';
 
 import { SharedModule } from './shared/shared.module';
 import { AppRoutingModule } from './app-routing.module';
@@ -31,7 +36,11 @@ import { AdministratorModule } from './authenticated/administrator/administrator
         RequestModule,
 
         HttpClientModule,
-        RouterModule
+        RouterModule,
+
+        AngularFireModule.initializeApp(environment.firebaseConfig),
+        AngularFireDatabaseModule,
+        AngularFireAuthModule
     ],
     providers: [],
     bootstrap: [AppComponent]

@@ -6,6 +6,15 @@ export const environment = {
     production: false,
     apiEndpoint: {
         api: 'http://localhost:3000/api/v1'
+    },
+    firebaseConfig: {
+        apiKey: "AIzaSyBamgpC318vtl2GzH7ZprrBdZItpk5062g",
+        authDomain: "ggaf-pcr.firebaseapp.com",
+        projectId: "ggaf-pcr",
+        storageBucket: "ggaf-pcr.appspot.com",
+        messagingSenderId: "872833291085",
+        appId: "1:872833291085:web:536ea8a72fef9b27319d04",
+        measurementId: "G-026PPLFXYS"
     }
 };
 

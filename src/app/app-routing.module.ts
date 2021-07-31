@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { MyRequestsComponent } from './authenticated/my-requests/view-requests/my-requests.component';
 
 const routes: Routes = [
@@ -33,7 +33,15 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+    imports: [
+        RouterModule.forRoot(
+            routes,
+            {
+                preloadingStrategy: PreloadAllModules,
+                useHash: true
+            }
+        )
+    ],
     exports: [RouterModule]
 })
 export class AppRoutingModule { }
