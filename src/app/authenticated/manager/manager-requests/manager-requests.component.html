@@ -1,0 +1,156 @@
+<div class="container-fluid">
+    <app-header></app-header>
+    <div class="container-box">
+        <div class="row">
+
+            <div class="col-sm-12">
+                <h3 class="title-box">Gerenciar Requisições</h3>
+            </div>
+
+        </div>
+
+        <div class="content-box">
+            <form [formGroup]="formFilterSolitation">
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Secretaria</mat-label>
+                            <mat-select formControlName="secretary">
+                                <mat-option *ngFor="let secretary of allSecretary" [value]="secretary.id">
+                                    {{secretary.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- <div class="col-md-2">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Local</mat-label>
+                            <mat-select formControlName="location">
+                                <mat-option *ngFor="let location of allLocation" [value]="location.id">
+                                    {{location.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div> -->
+
+                    <div class="col-md-2">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Solicitante</mat-label>
+                            <mat-select formControlName="requester">
+                                <mat-option *ngFor="let requester of listRequester" [value]="requester">
+                                    {{requester}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-2">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Status</mat-label>
+                            <mat-select formControlName="status">
+                                <mat-option *ngFor="let onestatus of todosStatus" [value]="onestatus.value">
+                                    {{onestatus.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-2">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Data da Solicitação</mat-label>
+                            <input type="date" matInput formControlName="data">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-2">
+                        <button mat-raised-button class="px-5 mt-2 btn-filter" color="primary" type="submit" (click)="filterRequests()">
+                            Filtrar
+                        </button>
+                    </div>
+
+                    <div class="col-md-2">
+                        <button mat-raised-button class="px-5 mt-2 btn-filter" color="warn" (click)='clear()'>Limpar</button>
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+
+        <div class="row">
+            <table mat-table [dataSource]="dataSource">
+
+                <ng-container matColumnDef="numeroSolicitacao">
+                    <th mat-header-cell *matHeaderCellDef> Número da Solicitação. </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.request_number}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="solicitante">
+                    <th mat-header-cell *matHeaderCellDef> Solicitante </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.requester}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="secretaria">
+                    <th mat-header-cell *matHeaderCellDef> Secretaria </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{getNameSecretaryById(element.id_secretary )}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="almoxarifado">
+                    <th mat-header-cell *matHeaderCellDef> Secretaria </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{getNameWharehouseById(element.id_warehouse )}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dataSolicitacao">
+                    <th mat-header-cell *matHeaderCellDef> Data da Solicitação </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.date_request | date:'dd/MM/yyyy HH:mm:ss'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef> Status </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.status}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="pedidoPor">
+                    <th mat-header-cell *matHeaderCellDef> Pedido Por </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.createdBy}}
+                    </td>
+                </ng-container>
+
+                <!-- <ng-container matColumnDef="verPedido">
+                    <th mat-header-cell *matHeaderCellDef> Visualizar </th>
+                    <td mat-cell *matCellDef="let element">
+
+                        <button mat-raised-button color="warn" (click)='openDialogView(element.id)'>Ver
+                            Pedido</button>
+                    </td>
+                </ng-container> -->
+
+                <ng-container matColumnDef="gerenciarPedido">
+                    <th mat-header-cell *matHeaderCellDef> Gerenciar </th>
+                    <td mat-cell *matCellDef="let element">
+                        <!-- <button mat-raised-button color="primary" (click)='openDialogManageRequest(element.id)'>Gerenciar</button> -->
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
+            </mat-paginator>
+        </div>
+
+    </div>
+</div>

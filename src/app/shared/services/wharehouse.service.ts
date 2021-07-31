@@ -27,7 +27,11 @@ export class WharehouseService {
         return this.requestService.Post(`${environment.apiEndpoint.api}/wharehouse/updateWharehouse/${id}`, wharehouse);
     }
 
-    deleteWharehouse(id: string): Observable<any> {
+    deleteWharehouse(id: number): Observable<any> {
         return this.requestService.Delete(`${environment.apiEndpoint.api}/wharehouse/deleteWharehouse/${id}`);
+    }
+
+    findWarehouseByEmail(email: string): Observable<any> {
+        return this.requestService.Get(`${environment.apiEndpoint.api}/wharehouse/findWarehouseByEmail/${email}`);
     }
 }
