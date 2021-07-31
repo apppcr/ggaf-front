@@ -1,5 +1,4 @@
 import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -17,7 +16,7 @@ import { WharehouseService } from '../../../shared/services/wharehouse.service';
 import { SolicitationService } from '../../../shared/services/solicitation.service';
 import {
     DialogViewSolicitationComponent
-} from '../../my-requests/dialog/dialog-view-solicitation/dialog-view-solicitation.component';
+} from '../../operator/dialog-view-solicitation/dialog-view-solicitation.component';
 
 @Component({
     selector: 'app-manage-all-requests',
@@ -45,7 +44,6 @@ export class ManageAllRequestsComponent implements OnInit {
     ];
 
     constructor(
-        private router: Router,
         private dialog: MatDialog,
         private secretaryService: SecretaryService,
         private wharehouseService: WharehouseService,

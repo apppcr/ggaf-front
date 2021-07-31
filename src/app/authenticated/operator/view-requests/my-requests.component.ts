@@ -16,8 +16,7 @@ import { User } from '../../../core/models/user.model';
 
 import {
     DialogViewSolicitationComponent
-} from '../dialog/dialog-view-solicitation/dialog-view-solicitation.component';
-
+} from '../dialog-view-solicitation/dialog-view-solicitation.component';
 
 @Component({
     selector: 'app-my-requests',
@@ -83,7 +82,7 @@ export class MyRequestsComponent implements OnInit {
     }
 
     newSocicitation(): void {
-        this.router.navigate(['request/new'])
+        this.router.navigate(['operador/new-request'])
     }
 
 }

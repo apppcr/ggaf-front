@@ -38,6 +38,9 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { BrMaskerModule } from 'br-mask';
+import {
+    DialogViewSolicitationComponent
+} from '../authenticated/operator/dialog-view-solicitation/dialog-view-solicitation.component';
 
 
 @NgModule({
@@ -45,6 +48,8 @@ import { BrMaskerModule } from 'br-mask';
         NavBarComponent,
         HeaderComponent,
         FooterComponent,
+
+        DialogViewSolicitationComponent
     ],
     imports: [
         CommonModule,

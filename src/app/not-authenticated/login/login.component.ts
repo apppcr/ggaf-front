@@ -8,6 +8,8 @@ import { AuthService } from '../../shared/services/auth.service';
 import { ProfileService } from './../../shared/services/profile.service';
 import { Profile } from '../../core/models/profile.model';
 
+// import data from '../../shared/profile-and-home.json';
+
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
@@ -18,6 +20,20 @@ export class LoginComponent implements OnInit {
     hide: any;
     loginFormGroup: FormGroup;
     allProfile: Profile[];
+    routeByProfile: any[] = [
+        {
+            name: 'Administrador', link: '/administrador'
+        },
+        {
+            name: 'Analista', link: '/analista'
+        },
+        {
+            name: 'Operador', link: '/operador'
+        },
+        {
+            name: 'Gestor', link: '/gestor'
+        }
+    ];
 
     constructor(
         private router: Router,
@@ -28,6 +44,7 @@ export class LoginComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+
         this.loginFormGroup = this.formBuilder.group({
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required, Validators.minLength(8)]],
@@ -36,7 +53,6 @@ export class LoginComponent implements OnInit {
         this.profileService.findAllProfile()
             .subscribe((result: any) => {
                 if (result.length > 0) {
-                    console.log(result);
                     this.allProfile = result;
                 }
             });
@@ -48,18 +64,19 @@ export class LoginComponent implements OnInit {
             const emailInput = this.loginFormGroup.get('email').value;
             const passwordInput = this.loginFormGroup.get('password').value;
 
-            this.auth.signIn(emailInput, passwordInput).then((resultFirebase) => {
-                console.log(resultFirebase.user);
-                this.userService.findUserByEmail(emailInput)
-                    .subscribe((result) => {
-                        if (result.length > 0) {
-                            localStorage.setItem('currentUser', JSON.stringify(result[0]));
-                            localStorage.setItem('userFirebase', JSON.stringify(resultFirebase.user));
+            this.auth.signIn(emailInput, passwordInput)
+                .then((resultFirebase) => {
+                    localStorage.setItem('userFirebase', JSON.stringify(resultFirebase.user));
+                    
+                    this.userService.findUserByEmail(emailInput)
+                        .subscribe((result) => {
 
-                            this.redirectByProfile(result[0].id_profile)
-                        };
-                    });
-            });
+                            if (result.length > 0) {
+                                localStorage.setItem('currentUser', JSON.stringify(result[0]));
+                                this.redirectByProfile(result[0].id_profile)
+                            };
+                        });
+                });
         }
     }
 
@@ -68,16 +85,10 @@ export class LoginComponent implements OnInit {
         const nameProfile = this.allProfile.find(x => x.id === currentIdProfile).name;
 
         if (!!nameProfile) {
-            const routeByProfile = [
-                { nameProfile: 'Administrador', link: '/request/view' },
-                { nameProfile: 'Analista', link: '/analyst/manage-all-requests' },
-                { nameProfile: 'Operador', link: '/operator/view' },
-            ];
-
-            const link = routeByProfile.find(x => x.nameProfile === nameProfile).link
+            const link = this.routeByProfile.find(x => x.name === nameProfile).link
             this.router.navigate([link]);
         } else {
-            this.router.navigate(['/operator/view']);
+            this.router.navigate(['/operator']);
         }
 
     }

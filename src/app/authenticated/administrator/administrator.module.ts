@@ -25,7 +25,7 @@ import { NewUserComponent } from './user/dialog/new-user/new-user.component';
         NewCostCenterComponent,
         NewProductComponent,
         NewSecretaryComponent,
-        NewUserComponent
+        NewUserComponent,
     ],
     exports: [
         CostCenterComponent,
@@ -33,7 +33,8 @@ import { NewUserComponent } from './user/dialog/new-user/new-user.component';
         ProductComponent,
         SecretaryComponent,
         UserComponent,
-        WarehousesComponent
+        WarehousesComponent,
+
     ],
     imports: [
         CommonModule,
