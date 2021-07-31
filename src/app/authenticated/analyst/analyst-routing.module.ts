@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { AccessPermissionGuard }  from '../../core/guards/acess-permission.guard';
+import { AccessPermissionGuard } from '../../core/guards/acess-permission.guard';
 import { AuthGuard } from '../../core/guards/auth.guard';
 
 import { ManageAllRequestsComponent } from './manage-all-requests/manage-all-requests.component';
 
 const routes: Routes = [
     {
-        path: 'manage-all-requests',
+        path: '',
         component: ManageAllRequestsComponent,
-         canActivate: [AccessPermissionGuard, AuthGuard]
+        canActivate: [AccessPermissionGuard, AuthGuard]
     }
 ];
 

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { MyRequestsComponent } from './authenticated/my-requests/view-requests/my-requests.component';
 
 const routes: Routes = [
     {
@@ -17,18 +16,13 @@ const routes: Routes = [
         loadChildren: () => import('./authenticated/administrator/administrador-routing.module').then(m => m.AdministradorRoutingModule)
     },
     {
-        path: 'analyst',
+        path: 'analista',
         loadChildren: () => import('./authenticated/analyst/analyst.module').then(m => m.AnalystModule)
     },
     {
-        path: 'request',
-        loadChildren: () => import('./authenticated/my-requests/request.module').then(m => m.RequestModule)
-
+        path: 'operador',
+        loadChildren: () => import('./authenticated/operator/operator.module').then(m => m.OperatorModule)
     }
-    // {
-    //     path: 'operator',
-    //     loadChildren: () => import('./authenticated/operator/operator.module').then(m => m.OperatorModule)
-    // }
 
 ];
 

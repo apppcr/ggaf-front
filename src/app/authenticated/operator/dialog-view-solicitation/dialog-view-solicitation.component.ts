@@ -1,16 +1,16 @@
 import { Observable } from 'rxjs';
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-import { ProductSolicitationService } from './../../../../shared/services/product-solicitation.service';
-import { SolicitationService } from './../../../../shared/services/solicitation.service';
-
-import { Solicitation } from './../../../../core/models/solicitation.model';
-import { ProductSolicitation } from './../../../../core/models/product-solicitation.model';
-import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { Product } from 'src/app/core/models/product.model';
-import { ProductService } from 'src/app/shared/services/product.service';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+
+import { ProductSolicitationService } from '../../../shared/services/product-solicitation.service';
+import { SolicitationService } from '../../../shared/services/solicitation.service';
+import { ProductService } from '../../../shared/services/product.service';
+
+import { Product } from '../../../core/models/product.model';
+import { Solicitation } from '../../../core/models/solicitation.model';
+import { ProductSolicitation } from '../../../core/models/product-solicitation.model';
 
 @Component({
     selector: 'app-dialog-view-solicitation',

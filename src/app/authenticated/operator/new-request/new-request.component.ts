@@ -21,7 +21,6 @@ import { ProductSolicitation } from '../../../core/models/product-solicitation.m
 import { UserService } from './../../../shared/services/user.service';
 import { ProfileService } from './../../../shared/services/profile.service';
 import { ProductService } from './../../../shared/services/product.service';
-import { WharehouseService } from './../../../shared/services/wharehouse.service';
 import { SolicitationService } from './../../../shared/services/solicitation.service';
 import { ProductSolicitationService } from './../../../shared/services/product-solicitation.service';
 
@@ -192,7 +191,7 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
                     .createProductSolicitation(this.productSolicitationSelected)
                     .subscribe(result => {
                         alert('Salvo com sucesso!');
-                        this.router.navigate(['/request/view']);
+                        this.router.navigate(['/operador']);
                     });
             });
     }

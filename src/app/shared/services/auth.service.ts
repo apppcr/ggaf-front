@@ -33,13 +33,13 @@ export class AuthService {
     signOut(): any {
         return this.angularFire.auth.signOut()
             .then(() => {
-                sessionStorage.removeItem('user');
+                localStorage.removeItem('user');
                 this.router.navigate(['/']);
             });
     }
 
     isAuthenticated(): boolean {
-        return !!sessionStorage.getItem('token');
+        return !!localStorage.getItem('token');
     }
 
     sendEmailVerification(): any {
@@ -57,16 +57,16 @@ export class AuthService {
     }
 
     get isLoggedIn(): boolean {
-        const user = JSON.parse(sessionStorage.getItem('user'));
+        const user = JSON.parse(sessionStorage.getItem('userFirebase'));
         return !!user && user.emailVerified;
     }
 
     getSessionUser(): any {
         this.angularFire.authState.subscribe(user => {
             if (user) {
-                sessionStorage.setItem('user', JSON.stringify(user));
+                localStorage.setItem('userFirebase', JSON.stringify(user));
             } else {
-                sessionStorage.setItem('user', null);
+                localStorage.setItem('userFirebase', null);
             }
         });
     }

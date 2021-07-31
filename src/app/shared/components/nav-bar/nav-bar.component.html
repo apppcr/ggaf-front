@@ -7,7 +7,7 @@
             <div class="col-sm-11" *ngIf="isLogged">
                 <ul>
                     <li>
-                        <button mat-button routerLink="request/view">
+                        <button mat-button [routerLink]="urlHome">
                             <mat-icon>home</mat-icon>
                             Minhas requisições
                         </button>

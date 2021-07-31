@@ -15,7 +15,6 @@ import { SharedModule } from './shared/shared.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AnalystModule } from './authenticated/analyst/analyst.module';
 import { OperatorModule } from './authenticated/operator/operator.module';
-import { RequestModule } from './authenticated/my-requests/request.module';
 import { NotAuthenticatedModule } from './not-authenticated/not-authenticated.module';
 import { AdministratorModule } from './authenticated/administrator/administrator.module';
 
@@ -33,7 +32,6 @@ import { AdministratorModule } from './authenticated/administrator/administrator
         NotAuthenticatedModule,
         AnalystModule,
         OperatorModule,
-        RequestModule,
 
         HttpClientModule,
         RouterModule,
