@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Solicitation } from '../../core/models/solicitation.model';
+import { FilterSolicitation } from '../../core/models/filter/filter-solicitation.models';
+
 import { environment } from './../../../environments/environment';
 import { RequestService } from './request.service';
 
@@ -28,6 +30,10 @@ export class SolicitationService {
 
     createSolicitation(solicitation: Solicitation) {
         return this.requestService.Post(`${environment.apiEndpoint.api}/solicitation/createSolicitation`, solicitation);
+    }
+    
+    filterSolicitation(solicitation: FilterSolicitation) {
+        return this.requestService.Post(`${environment.apiEndpoint.api}/solicitation/filterSolicitation`, solicitation);
     }
 
     updateSolicitation(solicitation: Solicitation, id: string) {
