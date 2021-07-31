@@ -22,6 +22,10 @@ const routes: Routes = [
     {
         path: 'operador',
         loadChildren: () => import('./authenticated/operator/operator.module').then(m => m.OperatorModule)
+    },
+    {
+        path: 'gestor',
+        loadChildren: () => import('./authenticated/manager/manager.module').then(m => m.ManagerModule)
     }
 
 ];

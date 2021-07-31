@@ -1,35 +1,30 @@
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 
-import { User } from './../../../core/models/user.model';
-import { Location } from './../../../core/models/location.model';
-import { Secretary } from './../../../core/models/secretary.model';
-import { Wharehouse } from './../../../core/models/wharehouse.model';
-import { Solicitation } from './../../../core/models/solicitation.model';
-import { FilterSolicitation } from './../../../core/models/filter/filter-solicitation.models';
+import { Solicitation } from '../../../core/models/solicitation.model';
+import { Wharehouse } from '../../../core/models/wharehouse.model';
+import { Secretary } from '../../../core/models/secretary.model';
+import { User } from '../../../core/models/user.model';
 
-import { DialogManagerRequestComponent } from './dialog/dialog-manager-request/dialog-manager-request.component';
-
-import { LocationService } from './../../../shared/services/location.service';
+import { LocationService } from '../../../shared/services/location.service';
 import { SecretaryService } from '../../../shared/services/secretary.service';
 import { WharehouseService } from '../../../shared/services/wharehouse.service';
 import { SolicitationService } from '../../../shared/services/solicitation.service';
-import {
-    DialogViewSolicitationComponent
-} from '../../operator/dialog-view-solicitation/dialog-view-solicitation.component';
+import { FilterSolicitation } from '../../../core/models/filter/filter-solicitation.models';
 
 @Component({
-    selector: 'app-manage-all-requests',
-    templateUrl: './manage-all-requests.component.html',
-    styleUrls: ['./manage-all-requests.component.scss']
+    selector: 'app-manager-requests',
+    templateUrl: './manager-requests.component.html',
+    styleUrls: ['./manager-requests.component.scss']
 })
-export class ManageAllRequestsComponent implements OnInit, AfterViewInit {
+export class ManagerRequestsComponent implements OnInit, AfterViewInit {
 
-    displayedColumns: string[] = ['numeroSolicitacao', 'solicitante', 'secretaria', 'almoxarifado', 'dataSolicitacao', 'status', 'pedidoPor', 'verPedido', 'gerenciarPedido'];
+    displayedColumns: string[] = ['numeroSolicitacao', 'solicitante', 'secretaria', 'almoxarifado', 'dataSolicitacao', 'status', 'pedidoPor', 'gerenciarPedido'];
+    // displayedColumns: string[] = ['numeroSolicitacao', 'solicitante', 'secretaria', 'almoxarifado', 'dataSolicitacao', 'status', 'pedidoPor', 'verPedido', 'gerenciarPedido'];
     dataSource = new MatTableDataSource<Solicitation>();
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -37,8 +32,9 @@ export class ManageAllRequestsComponent implements OnInit, AfterViewInit {
 
     allLocation: Location[];
     allSecretary: Secretary[];
-    allWharehouse: Wharehouse[];
+    allWharehouseByUser: Wharehouse[];
     allSocitation: Solicitation[];
+    allSocitationByUser: Solicitation[];
 
     currentUser: User;
     listRequester: string[];
@@ -82,17 +78,12 @@ export class ManageAllRequestsComponent implements OnInit, AfterViewInit {
         Observable.forkJoin([
             this.solicitationService.findAllSolicitation(),
             this.secretaryService.findAllSecretary(),
-            this.wharehouseService.findAllWharehouse(),
+            this.wharehouseService.findWarehouseByEmail(this.currentUser.email),
             this.locationService.getAllLocation()
         ]).subscribe((result) => {
 
             if (result[0].length > 0) {
                 this.allSocitation = result[0];
-                this.dataSource.data = [];
-                this.dataSource.data = this.allSocitation;
-                this.dataSource.paginator = this.paginator;
-
-                this.getRequesterByRequest();
             }
 
             if (result[1].length > 0) {
@@ -100,7 +91,16 @@ export class ManageAllRequestsComponent implements OnInit, AfterViewInit {
             }
 
             if (result[2].length > 0) {
-                this.allWharehouse = result[2];
+                this.allWharehouseByUser = result[2];
+
+                const currentWharehouse = this.allWharehouseByUser.map(aw => aw.id);
+                this.allSocitationByUser = this.allSocitation.filter(as => currentWharehouse.includes(as.id_warehouse));
+
+                this.dataSource.data = [];
+                this.dataSource.data = this.allSocitationByUser;
+                this.dataSource.paginator = this.paginator;
+
+                this.getRequesterByRequest();
             }
 
             if (result[3].length > 0) {
@@ -116,38 +116,10 @@ export class ManageAllRequestsComponent implements OnInit, AfterViewInit {
 
     getNameWharehouseById(id: number): string {
         if (!!id && id !== 0) {
-            return this.allWharehouse.find(wharehouse => wharehouse.id === id).name;
+            return this.allWharehouseByUser.find(wharehouse => wharehouse.id === id).name;
         } else {
             return 'N/A';
         }
-    }
-
-    openDialogView(id: number) {
-        const dialogRef = this.dialog.open(DialogViewSolicitationComponent, {
-            width: '800px',
-            data: {
-                idSolicitation: id
-            }
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            console.log(`Dialog result: ${result}`);
-        });
-    }
-
-    openDialogManageRequest(id: number) {
-        const dialogRef = this.dialog.open(DialogManagerRequestComponent, {
-            width: '800px',
-            data: {
-                idSolicitation: id,
-                allWharehouse: this.allWharehouse
-            }
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            this.loadView();
-            console.log(`Dialog result: ${result}`);
-        });
     }
 
     filterRequests(): void {
@@ -155,12 +127,14 @@ export class ManageAllRequestsComponent implements OnInit, AfterViewInit {
         const requester = this.formFilterSolitation.get('requester').value;
         const status = this.formFilterSolitation.get('status').value;
         const data = this.formFilterSolitation.get('data').value;
+        const wharehouse = this.allWharehouseByUser[0].id;
 
         const filter: FilterSolicitation = {
             secretary,
             requester,
             status,
             data,
+            wharehouse
         }
 
         this.solicitationService.filterSolicitation(filter)
@@ -171,7 +145,7 @@ export class ManageAllRequestsComponent implements OnInit, AfterViewInit {
 
     clear(): void {
         this.formFilterSolitation.reset();
-        this.realoadTable(this.allSocitation);
+        this.realoadTable(this.allSocitationByUser);
     }
 
     realoadTable(dataFilter: Solicitation[]): void {
@@ -181,8 +155,7 @@ export class ManageAllRequestsComponent implements OnInit, AfterViewInit {
     }
 
     getRequesterByRequest(): void {
-        this.listRequester = this.allSocitation.map(item => item.requester)
+        this.listRequester = this.allSocitationByUser.map(item => item.requester)
             .filter((v, i, a) => a.indexOf(v) === i);
     }
-
 }

@@ -88,7 +88,7 @@ export class LoginComponent implements OnInit {
             const link = this.routeByProfile.find(x => x.name === nameProfile).link
             this.router.navigate([link]);
         } else {
-            this.router.navigate(['/operator']);
+            this.router.navigate(['/operador']);
         }
 
     }

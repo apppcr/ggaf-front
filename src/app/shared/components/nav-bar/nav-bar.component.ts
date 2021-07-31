@@ -33,7 +33,7 @@ export class NavBarComponent implements OnInit, AfterViewInit {
             name: 'Operador', link: '/operador'
         },
         {
-            name: 'Gestor', link: '/operator'
+            name: 'Gestor', link: '/gestor'
         }
     ];
 
