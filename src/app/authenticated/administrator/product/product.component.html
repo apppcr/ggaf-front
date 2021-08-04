@@ -1,25 +1,50 @@
 <div class="content-box">
 
-    <button mat-raised-button color="primary" (click)="openDialogNewProduct()">Novo</button>
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Cadastro de Produtos</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <button mat-raised-button color="primary" (click)="openDialogNewProduct()">Adicionar</button>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-12">
+            <mat-form-field appearance="outline">
+                <mat-label>Pesquisar</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Ex: Notebook" #input>
+            </mat-form-field>
+        </div>
+    </div>
 
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-        <!-- Name Column -->
+        <!-- id Column -->
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef> ID </th>
             <td mat-cell *matCellDef="let element"> {{element.id}} </td>
         </ng-container>
 
-        <!-- Weight Column -->
-        <ng-container matColumnDef="produto">
-            <th mat-header-cell *matHeaderCellDef> Produto </th>
-            <td mat-cell *matCellDef="let element"> {{element.produto}} </td>
+        <!-- cadum Column -->
+        <ng-container matColumnDef="cadum">
+            <th mat-header-cell *matHeaderCellDef> CADUM </th>
+            <td mat-cell *matCellDef="let element"> {{element.cadum}} </td>
         </ng-container>
 
-        <!-- Symbol Column -->
-        <ng-container matColumnDef="descricao">
-            <th mat-header-cell *matHeaderCellDef> Descricao </th>
-            <td mat-cell *matCellDef="let element"> {{element.descricao}} </td>
+        <!-- name Column -->
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Produto </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <!-- description Column -->
+        <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef> Descrição </th>
+            <td mat-cell *matCellDef="let element"> {{element.description}} </td>
         </ng-container>
 
         <!-- Symbol Column -->
@@ -39,6 +64,11 @@
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">Nenhum registro encontrado para o termo "{{input.value}}"</td>
+        </tr>
     </table>
 
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgxMaskModule, IConfig } from 'ngx-mask'
 
 import { WarehousesComponent } from './warehouses/warehouses.component';
 import { UserComponent } from './user/user.component';
@@ -13,6 +14,10 @@ import { NewCostCenterComponent } from './cost-center/dialog/new-cost-center/new
 import { NewProductComponent } from './product/dialog/new-product/new-product.component';
 import { NewSecretaryComponent } from './secretary/dialog/new-secretary/new-secretary.component';
 import { NewUserComponent } from './user/dialog/new-user/new-user.component';
+import { NewWarehouseComponent } from './warehouses/dialog/new-warehouse/new-warehouse.component';
+import { NewLocationComponent } from './location/dialog/new-location/new-location.component';
+
+export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
 @NgModule({
     declarations: [
@@ -26,6 +31,8 @@ import { NewUserComponent } from './user/dialog/new-user/new-user.component';
         NewProductComponent,
         NewSecretaryComponent,
         NewUserComponent,
+        NewWarehouseComponent,
+        NewLocationComponent,
     ],
     exports: [
         CostCenterComponent,
@@ -39,7 +46,8 @@ import { NewUserComponent } from './user/dialog/new-user/new-user.component';
     imports: [
         CommonModule,
         AdministradorRoutingModule,
-        SharedModule
+        SharedModule,
+        NgxMaskModule.forRoot(),
     ]
 })
 export class AdministratorModule { }

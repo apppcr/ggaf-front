@@ -1,9 +1,9 @@
 export interface Location {
     id?: number;
-    name: string;
+    name?: string;
     local: string;
     address: string;
-    number?: Number;
+    number?: number;
     city?: string;
     state?: string;
     zip_code?: string;

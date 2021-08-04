@@ -1,16 +1,16 @@
 <div class="container">
 
-    <form [formGroup]="formNewProduct">
+    <form [formGroup]="formNewWareHouse">
 
-        <h1>Novo Produto</h1>
+        <h1>Novo Almoxarifado</h1>
 
         <br>
 
         <div class="row">
             <div class="col-sm-12">
                 <mat-form-field appearance="outline" class="width-input">
-                    <mat-label>CADUM</mat-label>
-                    <input matInput placeholder="CADUM" formControlName="cadum">
+                    <mat-label>Nome do Almoxarifado</mat-label>
+                    <input matInput placeholder="Nome do Almoxarifado" formControlName="name">
                 </mat-form-field>
             </div>
         </div>
@@ -18,8 +18,8 @@
         <div class="row">
             <div class="col-sm-12">
                 <mat-form-field appearance="outline" class="width-input">
-                    <mat-label>Produto</mat-label>
-                    <input matInput placeholder="Produto" formControlName="name">
+                    <mat-label>Responsável</mat-label>
+                    <input matInput placeholder="Responsável" formControlName="responsible">
                 </mat-form-field>
             </div>
         </div>
@@ -27,8 +27,8 @@
         <div class="row">
             <div class="col-sm-12">
                 <mat-form-field appearance="outline" class="width-input">
-                    <mat-label>Descrição</mat-label>
-                    <textarea matInput placeholder="Descrição" formControlName="description"></textarea>
+                    <mat-label>E-mail</mat-label>
+                    <input matInput placeholder="E-mail" formControlName="email">
                 </mat-form-field>
             </div>
         </div>

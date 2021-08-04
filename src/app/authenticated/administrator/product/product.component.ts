@@ -14,8 +14,13 @@ import { NewProductComponent } from './dialog/new-product/new-product.component'
 })
 export class ProductComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'produto', 'descricao', 'excluir', 'editar'];
+    displayedColumns: string[] = ['id', 'cadum', 'name', 'description', 'excluir', 'editar'];
     dataSource = new MatTableDataSource<Product>(ELEMENT_DATA);
+
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+      }
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -40,13 +45,13 @@ export class ProductComponent implements OnInit {
 }
 
 const ELEMENT_DATA: Product[] = [
-    { id: 1, name: "produto 1", description: "descricao 1" },
-    { id: 2, name: "produto 2", description: "descricao 2" },
-    { id: 3, name: "produto 3", description: "descricao 3" },
-    { id: 4, name: "produto 4", description: "descricao 4" },
-    { id: 5, name: "produto 5", description: "descricao 5" },
-    { id: 6, name: "produto 6", description: "descricao 6" },
-    { id: 7, name: "produto 7", description: "descricao 7" },
-    { id: 8, name: "produto 8", description: "descricao 8" },
-    { id: 9, name: "produto 9", description: "descricao 9" },
-]
+    { id: 1, cadum: '12345', name: "produto 1", description: "descricao 1" },
+    { id: 2, cadum: '12345', name: "produto 2", description: "descricao 2" },
+    { id: 3, cadum: '12345',name: "produto 3", description: "descricao 3" },
+    { id: 4, cadum: '12345',name: "produto 4", description: "descricao 4" },
+    { id: 5, cadum: '12345',name: "produto 5", description: "descricao 5" },
+    { id: 6, cadum: '12345',name: "produto 6", description: "descricao 6" },
+    { id: 7, cadum: '12345',name: "produto 7", description: "descricao 7" },
+    { id: 8, cadum: '12345',name: "produto 8", description: "descricao 8" },
+    { id: 9, cadum: '12345',name: "produto 9", description: "descricao 9" },
+];

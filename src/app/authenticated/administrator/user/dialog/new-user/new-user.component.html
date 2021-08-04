@@ -1,6 +1,6 @@
 <div class="container">
 
-    <form [formGroup]="formRequestGroup">
+    <form [formGroup]="formNewUser">
 
         <h1>Novo Usuário</h1>
 
@@ -35,14 +35,14 @@
             <div class="col-sm-6">
                 <mat-form-field appearance="outline" class="width-input">
                     <mat-label>Telefone</mat-label>
-                    <input matInput placeholder="Telefone" formControlName="phone">
+                    <input matInput placeholder="Telefone" formControlName="phone" mask="(00) 0000-0000||(00) 0 0000-0000">
                 </mat-form-field>
             </div>
 
             <div class="col-sm-6">
                 <mat-form-field appearance="outline" class="width-input">
                     <mat-label>CPF</mat-label>
-                    <input matInput placeholder="CPF" formControlName="cpf">
+                    <input matInput placeholder="CPF" formControlName="cpf" mask="000.000.000-00">
                 </mat-form-field>
             </div>
         </div>
@@ -50,15 +50,23 @@
         <div class="row">
             <div class="col-sm-6">
                 <mat-form-field appearance="outline" class="width-input">
-                    <mat-label>Local</mat-label>
-                    <input matInput placeholder="Local" formControlName="id_location">
+                    <mat-label>Secretaria</mat-label>
+                    <mat-select [(ngModel)]="selectSecretary" name="secretary">
+                        <mat-option *ngFor="let secretary of secretarys" [value]="secretary.value">
+                            {{secretary.viewValue}}
+                        </mat-option>
+                    </mat-select>
                 </mat-form-field>
             </div>
 
             <div class="col-sm-6">
                 <mat-form-field appearance="outline" class="width-input">
-                    <mat-label>Secretaria</mat-label>
-                    <input matInput placeholder="Secretaria" formControlName="id_secretary">
+                    <mat-label>Localidade</mat-label>
+                    <mat-select [(ngModel)]="selectLocal" name="local">
+                        <mat-option *ngFor="let local of locals" [value]="local.value">
+                            {{local.viewValue}}
+                        </mat-option>
+                    </mat-select>
                 </mat-form-field>
             </div>
         </div>
@@ -67,11 +75,34 @@
             <div class="col-sm-6">
                 <mat-form-field appearance="outline" class="width-input">
                     <mat-label>Perfil</mat-label>
-                    <input matInput placeholder="Perfil" formControlName="operator">
+                    <mat-select [(ngModel)]="selectProfile" name="profile">
+                        <mat-option *ngFor="let profile of profiles" [value]="profile.value">
+                            {{profile.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+                <mat-form-field appearance="outline" class="width-input">
+                    <mat-label>Senha</mat-label>
+                    <input matInput placeholder="Senha" formControlName="senha">
                 </mat-form-field>
             </div>
         </div>
 
-
+        <div class="row">
+            <div class="col-sm-8">
+            </div>
+            <div class="col-sm-2">
+                <button class="my-2 " mat-button mat-dialog-close>
+                    Fechar
+                </button>
+            </div>
+            <div class="col-sm-2">
+                <button mat-raised-button class="my-2 " color="primary" type="submit">
+                    Salvar
+                </button>
+            </div>
+        </div>
     </form>
 </div>
