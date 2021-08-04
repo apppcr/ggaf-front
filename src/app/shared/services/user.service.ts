@@ -28,11 +28,11 @@ export class UserService {
         return this.requestService.Post(`${environment.apiEndpoint.api}/user/createUser`, user);
     }
 
-    updateUser(user: User, id: string) {
+    updateUser(user: User, id: number) {
         return this.requestService.Post(`${environment.apiEndpoint.api}/user/updateUser/${id}`, user);
     }
 
-    deleteUser(id: string): Observable<any> {
+    deleteUser(id: number): Observable<any> {
         return this.requestService.Delete(`${environment.apiEndpoint.api}/user/deleteUser/${id}`);
     }
 

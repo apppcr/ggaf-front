@@ -7,17 +7,17 @@
         <br>
 
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-6">
                 <mat-form-field appearance="outline" class="width-input">
                     <mat-label>Matrícula</mat-label>
                     <input matInput placeholder="Matrícula" formControlName="registration">
                 </mat-form-field>
             </div>
 
-            <div class="col-sm-8">
+            <div class="col-sm-6">
                 <mat-form-field appearance="outline" class="width-input">
-                    <mat-label>E-mail</mat-label>
-                    <input matInput placeholder="E-mail" formControlName="email">
+                    <mat-label>CPF</mat-label>
+                    <input matInput placeholder="CPF" formControlName="cpf" mask="000.000.000-00">
                 </mat-form-field>
             </div>
         </div>
@@ -32,28 +32,34 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <mat-form-field appearance="outline" class="width-input">
                     <mat-label>Telefone</mat-label>
                     <input matInput placeholder="Telefone" formControlName="phone" mask="(00) 0000-0000||(00) 0 0000-0000">
                 </mat-form-field>
             </div>
 
-            <div class="col-sm-6">
+            <div class="col-sm-8">
                 <mat-form-field appearance="outline" class="width-input">
-                    <mat-label>CPF</mat-label>
-                    <input matInput placeholder="CPF" formControlName="cpf" mask="000.000.000-00">
+                    <mat-label>Perfil</mat-label>
+                    <mat-select formControlName="profile" name="profile">
+                        <mat-option *ngFor="let profile of allProfiles" [value]="profile.id">
+                            {{profile.name}}
+                        </mat-option>
+                    </mat-select>
                 </mat-form-field>
             </div>
+
+
         </div>
 
         <div class="row">
             <div class="col-sm-6">
                 <mat-form-field appearance="outline" class="width-input">
                     <mat-label>Secretaria</mat-label>
-                    <mat-select [(ngModel)]="selectSecretary" name="secretary">
-                        <mat-option *ngFor="let secretary of secretarys" [value]="secretary.value">
-                            {{secretary.viewValue}}
+                    <mat-select formControlName="secretary" name="secretary">
+                        <mat-option *ngFor="let secretary of allSecretarys" [value]="secretary.id">
+                            {{secretary.name}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -62,9 +68,9 @@
             <div class="col-sm-6">
                 <mat-form-field appearance="outline" class="width-input">
                     <mat-label>Localidade</mat-label>
-                    <mat-select [(ngModel)]="selectLocal" name="local">
-                        <mat-option *ngFor="let local of locals" [value]="local.value">
-                            {{local.viewValue}}
+                    <mat-select formControlName="location" name="local">
+                        <mat-option *ngFor="let local of allLocations" [value]="local.id">
+                            {{local.name}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -72,20 +78,24 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-6">
+
+        </div>
+
+        <div class="row">
+            <div class="col-sm">
                 <mat-form-field appearance="outline" class="width-input">
-                    <mat-label>Perfil</mat-label>
-                    <mat-select [(ngModel)]="selectProfile" name="profile">
-                        <mat-option *ngFor="let profile of profiles" [value]="profile.value">
-                            {{profile.viewValue}}
-                        </mat-option>
-                    </mat-select>
+                    <mat-label>E-mail</mat-label>
+                    <input matInput placeholder="E-mail" formControlName="email">
                 </mat-form-field>
             </div>
-            <div class="col-sm-6">
+
+            <div class="col-sm-5" *ngIf="isShowPassword">
                 <mat-form-field appearance="outline" class="width-input">
                     <mat-label>Senha</mat-label>
-                    <input matInput placeholder="Senha" formControlName="senha">
+                    <input matInput [type]="hide ? 'text' : 'password'" formControlName="password">
+                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="!hide">
+                        <mat-icon class="icon-input"> {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
                 </mat-form-field>
             </div>
         </div>
@@ -94,15 +104,16 @@
             <div class="col-sm-8">
             </div>
             <div class="col-sm-2">
-                <button class="my-2 " mat-button mat-dialog-close>
+                <button class="my-2 " mat-button mat-dialog-close (click)="close()">
                     Fechar
                 </button>
             </div>
             <div class="col-sm-2">
-                <button mat-raised-button class="my-2 " color="primary" type="submit">
+                <button mat-raised-button (click)="saveOrUpdate()" class="my-2 " color="primary" type="submit">
                     Salvar
                 </button>
             </div>
         </div>
+
     </form>
 </div>

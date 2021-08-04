@@ -4,9 +4,9 @@
 
     <br>
 
-    <button mat-raised-button color="primary" (click)="openDialogNewUser()">Adicionar</button>
+    <button mat-raised-button color="primary" (click)="openDialogNewOrEditUser()">Adicionar</button>
 
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
 
         <!-- id -->
         <ng-container matColumnDef="id">
@@ -35,21 +35,25 @@
         <!-- id_secretary -->
         <ng-container matColumnDef="id_secretary">
             <th mat-header-cell *matHeaderCellDef> Secretaria </th>
-            <td mat-cell *matCellDef="let element"> {{element.id_secretary}} </td>
+            <td mat-cell *matCellDef="let element"> {{getLabelSecreatary(element.id_secretary)}} </td>
         </ng-container>
 
         <!-- Excluir -->
         <ng-container matColumnDef="excluir">
             <th mat-header-cell *matHeaderCellDef> Excluir </th>
             <td mat-cell *matCellDef="let element">
-                <mat-icon>delete</mat-icon>
+                <mat-icon class="editButtonProduct" (click)="deleteSecretary(element.id)">
+                    delete
+                </mat-icon>
             </td>
         </ng-container>
         <!-- Symbol Column -->
         <ng-container matColumnDef="editar">
             <th mat-header-cell *matHeaderCellDef> Editar </th>
             <td mat-cell *matCellDef="let element">
-                <mat-icon>edit</mat-icon>
+                <mat-icon class="editButtonProduct" (click)="editSecretary(element.id)">
+                    edit
+                </mat-icon>
             </td>
         </ng-container>
 
