@@ -1,11 +1,13 @@
+import { UserFirebase } from './../../../../../core/models/user-firebase.model';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { Profile } from 'src/app/core/models/profile.model';
-import { Secretary } from 'src/app/core/models/secretary.model';
-import { User } from 'src/app/core/models/user.model';
-import { UserService } from 'src/app/shared/services/user.service';
+import { Profile } from '../../../../../core/models/profile.model';
+import { Secretary } from '../../../../../core/models/secretary.model';
+import { User } from '../../../../../core/models/user.model';
+
+import { UserService } from '../../../../../shared/services/user.service';
 
 @Component({
     selector: 'app-new-user',
@@ -17,10 +19,11 @@ export class NewUserComponent implements OnInit {
     formNewUser: FormGroup;
     hide: any;
 
-    allSecretarys: Secretary[] = [];
+    allUsers: User[];
     currentUser: User;
-    allLocations: Location[] = [];
     allProfiles: Profile[] = [];
+    allLocations: Location[] = [];
+    allSecretarys: Secretary[] = [];
 
     isShowPassword = true;
 
@@ -50,31 +53,41 @@ export class NewUserComponent implements OnInit {
             this.allSecretarys = this.data.allSecretarys;
             this.allLocations = this.data.allLocations;
             this.allProfiles = this.data.allProfiles;
+            this.allUsers = this.data.allUsers;
 
             if (!!this.data.currentUser) {
                 this.currentUser = this.data.currentUser;
                 this.setUserEdit(this.currentUser);
                 this.isShowPassword = false;
                 this.formNewUser.get('password').setValidators([]);
+                this.formNewUser.get('email').disable();
             }
         }
 
     }
 
     setUserEdit(currentUser: User): void {
+        this.formNewUser.get('cpf').setValue(currentUser.cpf);
         this.formNewUser.get('name').setValue(currentUser.name);
         this.formNewUser.get('email').setValue(currentUser.email);
         this.formNewUser.get('phone').setValue(currentUser.phone);
-        this.formNewUser.get('registration').setValue(currentUser.registration);
-        this.formNewUser.get('cpf').setValue(currentUser.cpf);
-        this.formNewUser.get('secretary').setValue(currentUser.id_secretary);
         this.formNewUser.get('profile').setValue(currentUser.id_profile);
         this.formNewUser.get('location').setValue(currentUser.id_location);
+        this.formNewUser.get('secretary').setValue(currentUser.id_secretary);
+        this.formNewUser.get('registration').setValue(currentUser.registration);
+    }
+
+    validateIfUserExists(): boolean {
+        const currentEmail = this.formNewUser.get('email').value;
+        return !!this.allUsers.find(x => x.email.toLowerCase() === currentEmail.toLowerCase()
+            && x.id !== this.currentUser.id);
     }
 
     saveOrUpdate(): void {
 
-        if (this.formNewUser.valid) {
+        if (this.validateIfUserExists()) {
+            alert(`Email informado, já encontra-se cadastrado.`);
+        } else if (this.formNewUser.valid) {
             const user: User = {
                 name: this.formNewUser.get('name').value,
                 email: this.formNewUser.get('email').value,
@@ -96,15 +109,30 @@ export class NewUserComponent implements OnInit {
             } else {
                 this.userService.createUser(user)
                     .subscribe(result => {
-                        alert('Usuário salvo com sucesso!');
-                        this.dialogRef.close(true);
+
+                        const userFirebase: UserFirebase = {
+                            email: user.email,
+                            emailVerified: false,
+                            phoneNumber: user.phone,
+                            password: this.formNewUser.get('name').value,
+                            displayName: user.name,
+                            disabled: false
+                        };
+
+                        this.userService.createUserFirebase(userFirebase)
+                            .subscribe(result => {
+                                alert('Usuário salvo com sucesso!');
+                                this.dialogRef.close(true);
+                            });
                     });
             }
 
-
-
         }
 
+    }
+
+    getLabelProfile(id: number): string {
+        return this.allProfiles.find(x => x.id === id).name;
     }
 
     close(): void {

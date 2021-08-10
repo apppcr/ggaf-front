@@ -21,12 +21,13 @@ import { Profile } from '../../../core/models/profile.model';
 })
 export class UserComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'name', 'email', 'operator', 'id_secretary', 'excluir', 'editar'];
+    displayedColumns: string[] = ['id', 'name', 'email', 'profile', 'id_secretary', 'excluir', 'editar'];
     dataSource = new MatTableDataSource<User>();
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
     allSecretarys: Secretary[] = [];
     allUsers: User[] = [];
+    allUsersFirebase: any[] = [];
     allLocations: Location[] = [];
     allProfiles: Profile[] = [];
 
@@ -46,11 +47,11 @@ export class UserComponent implements OnInit {
             this.profileService.findAllProfile()
         ]).subscribe((result) => {
 
-            console.log(result);
-
             if (result[0].length > 0) {
                 this.allUsers = result[0];
                 this.dataSource.data = this.allUsers;
+
+                this.getAllUserFirebase();
             }
 
             if (result[1].length > 0) {
@@ -66,6 +67,18 @@ export class UserComponent implements OnInit {
             }
         });
 
+    }
+
+    getAllUserFirebase(): void {
+        const emailUsers = this.allUsers.map(x => {
+            return { email: x.email }
+        });
+
+        this.userService.getUserFirebase({ users: emailUsers })
+            .subscribe(result => {
+                this.allUsersFirebase = result.users;
+                console.log(this.allUsersFirebase);
+            });
     }
 
     ngAfterViewInit(): void {
@@ -89,6 +102,7 @@ export class UserComponent implements OnInit {
                 allSecretarys: this.allSecretarys,
                 allLocations: this.allLocations,
                 allProfiles: this.allProfiles,
+                allUsers: this.allUsers,
                 currentUser: user
             }
         });
@@ -108,6 +122,7 @@ export class UserComponent implements OnInit {
                     this.allUsers = result;
                     this.dataSource.data = [];
                     this.dataSource.data = this.allUsers;
+                    this.getAllUserFirebase();
                 }
             });
     }
@@ -116,13 +131,24 @@ export class UserComponent implements OnInit {
         this.openDialogNewOrEditUser(id);
     }
 
-    deleteSecretary(id: number): void {
+    deleteSecretary(id: number, email: string): void {
+        const uid = this.allUsersFirebase.find(x => x.email === email).uid;
+
+        console.log(uid)
         this.userService.deleteUser(id)
             .subscribe((result) => {
-                this.dataSource.data = [];
-                alert('Excluido com sucesso!')
-                this.reloadTableUser();
+                const uid = this.allUsersFirebase.find(x => x.email === email).uid;
+                this.userService.deleteUserFirebase(uid)
+                    .subscribe((result) => {
+                        alert('Excluido com sucesso!')
+                        this.dataSource.data = [];
+                        this.reloadTableUser();
+                    });
             });
+    }
+
+    getLabelProfile(id: number): string {
+        return this.allProfiles.find(x => x.id === id).name;
     }
 
 }

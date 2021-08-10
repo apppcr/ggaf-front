@@ -16,6 +16,7 @@ import { NewSecretaryComponent } from './secretary/dialog/new-secretary/new-secr
 import { NewUserComponent } from './user/dialog/new-user/new-user.component';
 import { NewWarehouseComponent } from './warehouses/dialog/new-warehouse/new-warehouse.component';
 import { NewLocationComponent } from './location/dialog/new-location/new-location.component';
+import { RequestsComponent } from './requests/requests.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -33,6 +34,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         NewUserComponent,
         NewWarehouseComponent,
         NewLocationComponent,
+        RequestsComponent,
     ],
     exports: [
         CostCenterComponent,

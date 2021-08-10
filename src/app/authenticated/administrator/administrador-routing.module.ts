@@ -9,8 +9,14 @@ import { UserComponent } from './user/user.component';
 
 import { AuthGuard } from 'src/app/core/guards/auth.guard';
 import { AccessPermissionGuard } from 'src/app/core/guards/acess-permission.guard';
+import { RequestsComponent } from './requests/requests.component';
 
 const routes: Routes = [
+    {
+        path: '',
+        component: RequestsComponent,
+        canActivate: [AccessPermissionGuard, AuthGuard]
+    },
     {
         path: 'cost-center',
         component: CostCenterComponent,
