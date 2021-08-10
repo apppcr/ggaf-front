@@ -13,6 +13,8 @@ import { UserService } from './../../../shared/services/user.service';
 import { Secretary } from '../../../core/models/secretary.model';
 import { User } from '../../../core/models/user.model';
 import { Profile } from '../../../core/models/profile.model';
+import { AlertService } from './../../../shared/alert.service';
+import { yearsPerRow } from '@angular/material/datepicker';
 
 @Component({
     selector: 'app-user',
@@ -36,7 +38,8 @@ export class UserComponent implements OnInit {
         private userService: UserService,
         private secretaryService: SecretaryService,
         private locationService: LocationService,
-        private profileService: ProfileService
+        private profileService: ProfileService,
+        private alert: AlertService
     ) { }
 
     ngOnInit(): void {
@@ -77,7 +80,6 @@ export class UserComponent implements OnInit {
         this.userService.getUserFirebase({ users: emailUsers })
             .subscribe(result => {
                 this.allUsersFirebase = result.users;
-                console.log(this.allUsersFirebase);
             });
     }
 
@@ -131,19 +133,36 @@ export class UserComponent implements OnInit {
         this.openDialogNewOrEditUser(id);
     }
 
-    deleteSecretary(id: number, email: string): void {
-        const uid = this.allUsersFirebase.find(x => x.email === email).uid;
+    ruleDeleteSecretary(id: number, email: string): void {
+        this.alert.dialogWarning(
+            'Tem certeza que deseja excluir esse usuário?',
+            'Você não poderá reverter isso!'
+        ).then(result => {
+                if (result.isConfirmed) {
+                    this.deleteSecretary(id, email);
+                }
+            });
+    }
 
-        console.log(uid)
+    deleteSecretary(id: number, email: string): void {
         this.userService.deleteUser(id)
             .subscribe((result) => {
-                const uid = this.allUsersFirebase.find(x => x.email === email).uid;
-                this.userService.deleteUserFirebase(uid)
-                    .subscribe((result) => {
-                        alert('Excluido com sucesso!')
-                        this.dataSource.data = [];
-                        this.reloadTableUser();
-                    });
+                const user: any = this.allUsersFirebase.find(x => x.email === email);
+
+                if (!!user && user.uid) {
+                    this.userService.deleteUserFirebase(user.uid)
+                        .subscribe((result) => {
+                            this.alert.sucess('Excluido com sucesso!');
+                            this.dataSource.data = [];
+                            this.reloadTableUser();
+                        });
+
+                } else {
+                    this.alert.sucess('Excluido com sucesso!');
+                    this.dataSource.data = [];
+                    this.reloadTableUser();
+                }
+
             });
     }
 

@@ -1,3 +1,4 @@
+import { AlertService } from './../../../../../shared/alert.service';
 import { UserFirebase } from './../../../../../core/models/user-firebase.model';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -32,7 +33,8 @@ export class NewUserComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA)
         private data: any,
         private userService: UserService,
-        public dialogRef: MatDialogRef<NewUserComponent>
+        public dialogRef: MatDialogRef<NewUserComponent>,
+        private alert: AlertService
     ) { }
 
     ngOnInit(): void {
@@ -86,7 +88,7 @@ export class NewUserComponent implements OnInit {
     saveOrUpdate(): void {
 
         if (this.validateIfUserExists()) {
-            alert(`Email informado, já encontra-se cadastrado.`);
+            this.alert.sucess(`Email informado, já encontra-se cadastrado.`);
         } else if (this.formNewUser.valid) {
             const user: User = {
                 name: this.formNewUser.get('name').value,
@@ -103,7 +105,7 @@ export class NewUserComponent implements OnInit {
             if (!!this.currentUser) {
                 this.userService.updateUser(user, this.currentUser.id)
                     .subscribe(result => {
-                        alert('Usuário editado com sucesso!');
+                        this.alert.sucess('Usuário editado com sucesso!');
                         this.dialogRef.close(true);
                     });
             } else {
@@ -121,7 +123,7 @@ export class NewUserComponent implements OnInit {
 
                         this.userService.createUserFirebase(userFirebase)
                             .subscribe(result => {
-                                alert('Usuário salvo com sucesso!');
+                                this.alert.sucess('Usuário salvo com sucesso!');
                                 this.dialogRef.close(true);
                             });
                     });
