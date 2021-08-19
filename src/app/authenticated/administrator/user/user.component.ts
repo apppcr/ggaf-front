@@ -13,6 +13,8 @@ import { UserService } from './../../../shared/services/user.service';
 import { Secretary } from '../../../core/models/secretary.model';
 import { User } from '../../../core/models/user.model';
 import { Profile } from '../../../core/models/profile.model';
+import { AlertService } from './../../../shared/alert.service';
+import { yearsPerRow } from '@angular/material/datepicker';
 
 @Component({
     selector: 'app-user',
@@ -21,12 +23,13 @@ import { Profile } from '../../../core/models/profile.model';
 })
 export class UserComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'name', 'email', 'operator', 'id_secretary', 'excluir', 'editar'];
+    displayedColumns: string[] = ['id', 'name', 'email', 'profile', 'id_secretary', 'excluir', 'editar'];
     dataSource = new MatTableDataSource<User>();
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
     allSecretarys: Secretary[] = [];
     allUsers: User[] = [];
+    allUsersFirebase: any[] = [];
     allLocations: Location[] = [];
     allProfiles: Profile[] = [];
 
@@ -35,7 +38,8 @@ export class UserComponent implements OnInit {
         private userService: UserService,
         private secretaryService: SecretaryService,
         private locationService: LocationService,
-        private profileService: ProfileService
+        private profileService: ProfileService,
+        private alert: AlertService
     ) { }
 
     ngOnInit(): void {
@@ -46,11 +50,11 @@ export class UserComponent implements OnInit {
             this.profileService.findAllProfile()
         ]).subscribe((result) => {
 
-            console.log(result);
-
             if (result[0].length > 0) {
                 this.allUsers = result[0];
                 this.dataSource.data = this.allUsers;
+
+                this.getAllUserFirebase();
             }
 
             if (result[1].length > 0) {
@@ -66,6 +70,17 @@ export class UserComponent implements OnInit {
             }
         });
 
+    }
+
+    getAllUserFirebase(): void {
+        const emailUsers = this.allUsers.map(x => {
+            return { email: x.email }
+        });
+
+        this.userService.getUserFirebase({ users: emailUsers })
+            .subscribe(result => {
+                this.allUsersFirebase = result.users;
+            });
     }
 
     ngAfterViewInit(): void {
@@ -89,6 +104,7 @@ export class UserComponent implements OnInit {
                 allSecretarys: this.allSecretarys,
                 allLocations: this.allLocations,
                 allProfiles: this.allProfiles,
+                allUsers: this.allUsers,
                 currentUser: user
             }
         });
@@ -108,6 +124,7 @@ export class UserComponent implements OnInit {
                     this.allUsers = result;
                     this.dataSource.data = [];
                     this.dataSource.data = this.allUsers;
+                    this.getAllUserFirebase();
                 }
             });
     }
@@ -116,13 +133,41 @@ export class UserComponent implements OnInit {
         this.openDialogNewOrEditUser(id);
     }
 
-    deleteSecretary(id: number): void {
+    ruleDeleteSecretary(id: number, email: string): void {
+        this.alert.dialogWarning(
+            'Tem certeza que deseja excluir esse usuário?',
+            'Você não poderá reverter isso!'
+        ).then(result => {
+                if (result.isConfirmed) {
+                    this.deleteSecretary(id, email);
+                }
+            });
+    }
+
+    deleteSecretary(id: number, email: string): void {
         this.userService.deleteUser(id)
             .subscribe((result) => {
-                this.dataSource.data = [];
-                alert('Excluido com sucesso!')
-                this.reloadTableUser();
+                const user: any = this.allUsersFirebase.find(x => x.email === email);
+
+                if (!!user && user.uid) {
+                    this.userService.deleteUserFirebase(user.uid)
+                        .subscribe((result) => {
+                            this.alert.sucess('Excluido com sucesso!');
+                            this.dataSource.data = [];
+                            this.reloadTableUser();
+                        });
+
+                } else {
+                    this.alert.sucess('Excluido com sucesso!');
+                    this.dataSource.data = [];
+                    this.reloadTableUser();
+                }
+
             });
+    }
+
+    getLabelProfile(id: number): string {
+        return this.allProfiles.find(x => x.id === id).name;
     }
 
 }

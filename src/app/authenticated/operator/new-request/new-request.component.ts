@@ -23,6 +23,7 @@ import { ProfileService } from './../../../shared/services/profile.service';
 import { ProductService } from './../../../shared/services/product.service';
 import { SolicitationService } from './../../../shared/services/solicitation.service';
 import { ProductSolicitationService } from './../../../shared/services/product-solicitation.service';
+import { AlertService } from './../../../shared/alert.service';
 
 
 @Component({
@@ -56,7 +57,8 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
         private profileService: ProfileService,
         private productService: ProductService,
         private solicitationService: SolicitationService,
-        private productSolicitationService: ProductSolicitationService
+        private productSolicitationService: ProductSolicitationService,
+        private alert: AlertService
     ) { }
 
     ngAfterViewInit() {
@@ -154,7 +156,7 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
         if (this.formAddProductGroup.valid && this.productSolicitationSelected.length > 0) {
             this.saveRequest();
         } else if (this.formAddProductGroup.valid && this.productSolicitationSelected.length === 0) {
-            alert('Favor adicionar pelo menos um produto');
+            this.alert.sucess('Favor adicionar pelo menos um produto.');
         }
     }
 
@@ -175,7 +177,7 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
             createdBy: this.currentUser.name,
 
             status: 'Aberto',
- 
+
             id_secretary: this.currentUser.id_secretary,
             operator: this.currentUser.email
         }
@@ -190,7 +192,7 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
                 this.productSolicitationService
                     .createProductSolicitation(this.productSolicitationSelected)
                     .subscribe(result => {
-                        alert('Salvo com sucesso!');
+                        this.alert.sucess('Salvo com sucesso!');
                         this.router.navigate(['/operador']);
                     });
             });

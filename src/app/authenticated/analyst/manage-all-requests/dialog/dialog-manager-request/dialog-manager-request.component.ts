@@ -1,6 +1,6 @@
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Warehouse } from '../../../../../core/models/warehouse.model';
@@ -8,6 +8,7 @@ import { Solicitation } from '../../../../../core/models/solicitation.model';
 import { User } from '../../../../../core/models/user.model';
 
 import { SolicitationService } from '../../../../../shared/services/solicitation.service';
+import { AlertService } from '../../../../../shared/alert.service';
 
 @Component({
     selector: 'app-dialog-manager-request',
@@ -44,6 +45,7 @@ export class DialogManagerRequestComponent implements OnInit {
         private data: any,
         private solicitationService: SolicitationService,
         private dialogRef: MatDialogRef<any>,
+        private alert: AlertService
     ) {
 
     }
@@ -81,7 +83,7 @@ export class DialogManagerRequestComponent implements OnInit {
 
             this.solicitationService.updateSolicitation(this.currentSolicitation, this.data.idSolicitation)
                 .subscribe(result => {
-                    alert('Solicitação encaminhada com sucesso!');
+                    this.alert.sucess('Solicitação encaminhada com sucesso!');
                     this.dialogRef.close();
                 });
         }

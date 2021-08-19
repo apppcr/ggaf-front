@@ -2,9 +2,10 @@ import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
+import { RequestService } from './request.service';
 import { User } from '../../core/models/user.model';
 import { environment } from './../../../environments/environment';
-import { RequestService } from './request.service';
+import { UserFirebase } from '../../core/models/user-firebase.model';
 
 @Injectable({
     providedIn: 'root'
@@ -42,5 +43,21 @@ export class UserService {
 
     getLoggedInUserAndProfile(): Observable<any> {
         return this.userLoggedInUserAndProfile.asObservable();
+    }
+
+    createUserFirebase(user: UserFirebase) {
+        return this.requestService.Post(`${environment.apiEndpoint.api}/user/firebase/createUser`, user);
+    }
+
+    deleteUserFirebase(uid: string): Observable<any> {
+        return this.requestService.Delete(`${environment.apiEndpoint.api}/user/firebase/deleteUser/${uid}`);
+    }
+
+    updateUserFirebase(user: User, uid: number) {
+        return this.requestService.Put(`${environment.apiEndpoint.api}/user/firebase/updateUser/${uid}`, user);
+    }
+
+    getUserFirebase(users: any) {
+        return this.requestService.Post(`${environment.apiEndpoint.api}/user/firebase/getUsers`, users);
     }
 }

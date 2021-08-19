@@ -12,8 +12,8 @@ const routes: Routes = [
         loadChildren: () => import('./not-authenticated/not-authenticated.module').then(m => m.NotAuthenticatedModule)
     },
     {
-        path: 'administrator',
-        loadChildren: () => import('./authenticated/administrator/administrador-routing.module').then(m => m.AdministradorRoutingModule)
+        path: 'administrador',
+        loadChildren: () => import('./authenticated/administrator/administrator.module').then(m => m.AdministratorModule)
     },
     {
         path: 'analista',
