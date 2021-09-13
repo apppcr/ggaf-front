@@ -42,7 +42,7 @@ export class AuthService {
         return !!localStorage.getItem('token');
     }
 
-    sendEmailVerification(): any {
+    sendEmailVerification(): Promise<any> {
         this.angularFire.auth.languageCode = 'pt-BR';
         return this.angularFire.auth.currentUser.sendEmailVerification();
     }

@@ -81,14 +81,13 @@ export class NewUserComponent implements OnInit {
 
     validateIfUserExists(): boolean {
         const currentEmail = this.formNewUser.get('email').value;
-        return !!this.allUsers.find(x => x.email.toLowerCase() === currentEmail.toLowerCase()
-            && x.id !== this.currentUser.id);
+        return !!this.allUsers.find(x => x.email.toLowerCase() === currentEmail.toLowerCase() && x.id !== this.currentUser?.id);
     }
 
     saveOrUpdate(): void {
 
         if (this.validateIfUserExists()) {
-            this.alert.sucess(`Email informado, já encontra-se cadastrado.`);
+            this.alert.warning(`Email informado, já encontra-se cadastrado.`);
         } else if (this.formNewUser.valid) {
             const user: User = {
                 name: this.formNewUser.get('name').value,

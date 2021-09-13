@@ -1,4 +1,3 @@
-import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { environment } from './../../../environments/environment';
@@ -9,11 +8,9 @@ import { RequestService } from './request.service';
   providedIn: 'root'
 })
 export class EmailService {
+  constructor(private requestService: RequestService) { }
 
-    private options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
-    constructor(private requestService: RequestService) { }
-
-    send(wharehouse: Email) {
-        return this.requestService.Post(`${environment.apiEndpoint.api}/email/send`, wharehouse);
-    }
+  send(email: Email) {
+    return this.requestService.Post(`${environment.apiEndpoint.api}/email/send`, email);
+  }
 }

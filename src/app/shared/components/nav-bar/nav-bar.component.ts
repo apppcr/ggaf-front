@@ -63,9 +63,6 @@ export class NavBarComponent implements OnInit, AfterViewInit {
                             this.idAdmin = this.isUserAdmin(user.idPerfil);
                             this.idPerfil = user.idPerfil;
 
-
-
-
                             this.linkHomeByProfile(this.idPerfil);
                             this.loadMenuAdm();
                         }
@@ -76,15 +73,14 @@ export class NavBarComponent implements OnInit, AfterViewInit {
     }
 
     isUserAdmin(idProfile: number): boolean {
-        if (this.allProfile.length > 0) {
-            const nameProfile = this.allProfile.find(x => x.id === idProfile).name;
+        if (this.allProfile.length > 0 && idProfile > 0) {
+            const nameProfile = this.allProfile?.find(x => x.id === idProfile).name;
             return nameProfile === 'Administrador';
         }
     }
 
     loadMenuAdm(): void {
         this.menuAdministration = [
-            { label: 'Centro de Custo', link: 'administrador/cost-center' },
             { label: 'Localização', link: 'administrador/location' },
             { label: 'Produtos', link: 'administrador/product' },
             { label: 'Usuários', link: 'administrador/user' },

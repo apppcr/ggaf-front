@@ -63,6 +63,7 @@ export class NewProductComponent implements OnInit {
     if (this.validateIfProductExists()) {
       this.alert.sucess(`Produto informado, já encontra-se cadastrado.`);
     } else if (this.formNewProduct.valid) {
+      
       const product: Product = {
         name: this.formNewProduct.get('name').value,
         cadum: this.formNewProduct.get('cadum').value,
@@ -76,16 +77,9 @@ export class NewProductComponent implements OnInit {
             this.alert.sucess('Produto editado com sucesso!');
             this.dialogRef.close(true);
           });
+
       } else {
-
-        const productCurrent: Product = {
-          name: product.name,
-          cadum: product.cadum,
-          description: product.description,
-          operator: JSON.parse(localStorage.getItem('currentUser')).email
-        };
-
-        this.productService.createProduct(productCurrent)
+        this.productService.createProduct(product)
           .subscribe(result => {
             this.alert.sucess('Produto salvo com sucesso!');
             this.dialogRef.close(true);

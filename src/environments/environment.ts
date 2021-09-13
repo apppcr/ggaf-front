@@ -15,7 +15,8 @@ export const environment = {
         messagingSenderId: "872833291085",
         appId: "1:872833291085:web:536ea8a72fef9b27319d04",
         measurementId: "G-026PPLFXYS"
-    }
+    }, 
+    linkSystem: 'http://ggaf.renatobezerra.com.br/'
 };
 
 /*

@@ -1,9 +1,9 @@
-import { Router } from '@angular/router';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { EMPTY, Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 import {
     NgxViacepService,
@@ -13,18 +13,20 @@ import {
 import { catchError } from 'rxjs/operators';
 
 import { User } from '../../../core/models/user.model';
+import { Email } from '../../../core/models/email.model';
 import { Product } from '../../../core/models/product.model';
 import { Wharehouse } from '../../../core/models/wharehouse.model';
 import { Solicitation } from '../../../core/models/solicitation.model';
 import { ProductSolicitation } from '../../../core/models/product-solicitation.model';
 
+import { AlertService } from './../../../shared/alert.service';
 import { UserService } from './../../../shared/services/user.service';
+import { EmailService } from './../../../shared/services/email.service';
 import { ProfileService } from './../../../shared/services/profile.service';
 import { ProductService } from './../../../shared/services/product.service';
 import { SolicitationService } from './../../../shared/services/solicitation.service';
 import { ProductSolicitationService } from './../../../shared/services/product-solicitation.service';
-import { AlertService } from './../../../shared/alert.service';
-
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-new-request',
@@ -58,7 +60,8 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
         private productService: ProductService,
         private solicitationService: SolicitationService,
         private productSolicitationService: ProductSolicitationService,
-        private alert: AlertService
+        private alert: AlertService,
+        private emailService: EmailService
     ) { }
 
     ngAfterViewInit() {
@@ -191,11 +194,50 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
 
                 this.productSolicitationService
                     .createProductSolicitation(this.productSolicitationSelected)
-                    .subscribe(result => {
-                        this.alert.sucess('Salvo com sucesso!');
-                        this.router.navigate(['/operador']);
+                    .subscribe(resultProductSolicitation => {
+
+                        this.solicitationService.findSolicitationById(result.id)
+                            .subscribe(resultSolicitation => {
+                                const solicitation: Solicitation = resultSolicitation[0];
+
+                                this.productSolicitationService.findProductSolicitationById(solicitation.id)
+                                    .subscribe(resultProductSolicitation => {
+                                        const currentProductSolicitation: ProductSolicitation[] = resultProductSolicitation;
+
+                                        const email: Email = {
+                                            from: solicitation.email,
+                                            to: [solicitation.email],
+                                            subject: `GGAF - Requisição número ${solicitation.request_number}`,
+                                            text: this.createTextEmail(solicitation, currentProductSolicitation)
+                                        }
+
+                                        this.emailService.send(email)
+                                            .subscribe(result => {
+                                                this.alert.sucess('Salvo com sucesso!');
+                                                this.router.navigate(['/operador']);
+                                            });
+
+                                    });
+                            });
                     });
             });
+    }
+
+    createTextEmail(solicitation: Solicitation, productSolicitation: ProductSolicitation[]): string {
+        const products = [];
+        let msg = `Sua requisição de número ${solicitation.request_number} foi criada com sucesso! \n\n`;
+
+        if (productSolicitation.length > 0) {
+            productSolicitation.forEach((x: ProductSolicitation) => {
+                const msgProduct = `\n CADUM: ${x.cadum} | Nome do Produtor: ${this.getProductById(x.id_product).name} | Descrição: ${this.getProductById(x.id_product).description} | Quantidade: ${x.amount}`
+                products.push(msgProduct);
+            });
+        }
+
+        msg += products.join().replace(/,/g, ' ');
+        msg += `\n\n Para mais detalhes acesse ${environment.linkSystem}.`;
+
+        return msg;
     }
 
     removeRequeridValidator(): void {

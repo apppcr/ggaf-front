@@ -1,5 +1,9 @@
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { AuthService } from '../../shared/services/auth.service';
+import { AlertService } from './../../shared/alert.service';
 
 @Component({
     selector: 'app-forgot-the-password',
@@ -11,7 +15,10 @@ export class ForgotThePasswordComponent implements OnInit {
     forgotPasswordFormGroup: FormGroup;
 
     constructor(
-        private formBuilder: FormBuilder
+        private formBuilder: FormBuilder,
+        private auth: AuthService,
+        private alert: AlertService,
+        private router: Router
     ) { }
 
     ngOnInit(): void {
@@ -21,6 +28,13 @@ export class ForgotThePasswordComponent implements OnInit {
     }
 
     buttonSendEmail(): void {
-
+        if (this.forgotPasswordFormGroup.valid) {
+            const email = this.forgotPasswordFormGroup.get('email').value;
+            this.auth.sendPasswordResetEmail(email)
+                .then(arg => {
+                    this.router.navigate(['/']);
+                    this.alert.sucess('E-mail com redefinição de senha enviado com sucesso!');
+                });
+        }
     }
 }

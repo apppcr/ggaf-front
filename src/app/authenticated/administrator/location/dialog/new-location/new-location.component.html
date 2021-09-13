@@ -16,7 +16,7 @@
             <div class="col-sm-4">
                 <mat-form-field appearance="outline" class="width-input">
                     <mat-label>CEP</mat-label>
-                    <input matInput placeholder="CEP" formControlName="zip_code">
+                    <input matInput placeholder="CEP" formControlName="zip_code" (change)="searchCep()" [brmasker]="{mask:'00000-000', len:9, userCaracters: true}">
                 </mat-form-field>
             </div>
         </div>

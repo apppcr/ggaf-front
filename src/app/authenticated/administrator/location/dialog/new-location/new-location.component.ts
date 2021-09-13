@@ -6,6 +6,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Location } from '../../../../../core/models/location.model';
 import { LocationService } from '../../../../../shared/services/location.service';
 
+import { CEPError, Endereco, NgxViacepService } from '@brunoc/ngx-viacep';
+import { catchError } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+
 @Component({
   selector: 'app-new-location',
   templateUrl: './new-location.component.html',
@@ -25,7 +29,8 @@ export class NewLocationComponent implements OnInit {
     private data: any,
     private locationService: LocationService,
     public dialogRef: MatDialogRef<NewLocationComponent>,
-    private alert: AlertService
+    private alert: AlertService,
+    private viacep: NgxViacepService,
   ) { }
 
   ngOnInit(): void {
@@ -38,7 +43,7 @@ export class NewLocationComponent implements OnInit {
       state: ['', Validators.required],
       zip_code: ['', Validators.required],
       district: ['', Validators.required],
-      complement: ['', Validators.required],
+      complement: [''],
     });
 
     if (!!this.data) {
@@ -121,5 +126,31 @@ export class NewLocationComponent implements OnInit {
   close(): void {
     this.dialogRef.close(false);
   }
+
+  searchCep(): void {
+    const cep = this.formNewLocation.get('zip_code').value;
+
+    this.viacep
+        .buscarPorCep(cep.replace('-', ''))
+        .pipe(
+            catchError((error: CEPError) => {
+                // Ocorreu algum erro :/
+                console.log(error.message);
+                return EMPTY;
+            })
+        )
+        .subscribe((endereco: Endereco) => {
+            this.formNewLocation.get('address').disable();
+            this.formNewLocation.get('district').disable();
+            this.formNewLocation.get('city').disable();
+            this.formNewLocation.get('state').disable();
+
+            this.formNewLocation.get('address').setValue(endereco.logradouro);
+            this.formNewLocation.get('district').setValue(endereco.bairro);
+            this.formNewLocation.get('city').setValue(endereco.localidade);
+            this.formNewLocation.get('state').setValue(endereco.uf);
+        });
+
+}
 
 }

@@ -70,7 +70,7 @@
                     <mat-label>Localidade</mat-label>
                     <mat-select formControlName="location" name="local">
                         <mat-option *ngFor="let local of allLocations" [value]="local.id">
-                            {{local.name}}
+                            {{local.local}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>

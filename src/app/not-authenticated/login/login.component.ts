@@ -6,9 +6,8 @@ import { UserService } from '../../shared/services/user.service';
 import { AuthService } from '../../shared/services/auth.service';
 
 import { ProfileService } from './../../shared/services/profile.service';
+import { AlertService } from './../../shared/alert.service';
 import { Profile } from '../../core/models/profile.model';
-
-// import data from '../../shared/profile-and-home.json';
 
 @Component({
     selector: 'app-login',
@@ -40,7 +39,8 @@ export class LoginComponent implements OnInit {
         private auth: AuthService,
         private formBuilder: FormBuilder,
         private userService: UserService,
-        private profileService: ProfileService
+        private profileService: ProfileService,
+        private alert: AlertService
     ) { }
 
     ngOnInit(): void {
@@ -67,15 +67,27 @@ export class LoginComponent implements OnInit {
             this.auth.signIn(emailInput, passwordInput)
                 .then((resultFirebase) => {
                     localStorage.setItem('userFirebase', JSON.stringify(resultFirebase.user));
-                    
+
                     this.userService.findUserByEmail(emailInput)
                         .subscribe((result) => {
 
                             if (result.length > 0) {
                                 localStorage.setItem('currentUser', JSON.stringify(result[0]));
                                 this.redirectByProfile(result[0].id_profile)
+                            } else {
+                                this.alert.warning("Não há registro de usuário correspondente a este e-mail, por favor entre em contato com o administrador.");
                             };
                         });
+                }).catch(e => {
+                    console.log(e)
+                    let msg = 'Desculpe, ocorreu um erro, tente novamente.';
+                    if (e.code === 'auth/wrong-password') {
+                        msg = 'Usuário e/ou senha inválido.'
+                    } else if (e.code === 'auth/user-not-found') {
+                        msg = 'Não há registro de usuário correspondente a este e-mail.'
+                    }
+
+                    this.alert.error(msg);
                 });
         }
     }
