@@ -3,6 +3,6 @@ export interface Secretary {
     name: string;
     responsible: string;
     email: string;
-    background: string;
+    background?: string;
     operator?: string;
 }

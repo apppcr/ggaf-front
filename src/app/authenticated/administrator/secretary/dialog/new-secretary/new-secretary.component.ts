@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { AlertService } from './../../../../../shared/alert.service';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { Secretary } from '../../../../../core/models/secretary.model';
+import { SecretaryService } from '../../../../../shared/services/secretary.service';
 
 @Component({
     selector: 'app-new-secretary',
@@ -10,30 +13,86 @@ import { Secretary } from '../../../../../core/models/secretary.model';
 })
 export class NewSecretaryComponent implements OnInit {
 
-
     secretariaFormGroup: FormGroup;
+    hide: any;
 
-    constructor(private formBuilder: FormBuilder) {
-        this.secretariaFormGroup = this.formBuilder.group({
-            nome: ['', Validators.required],
-            responsavel: ['', Validators.required],
-            fundo: ['', Validators.required],
-        });
-    }
+    allSecretarys: Secretary[] = [];
+    currentSecretary: Secretary;
+
+    constructor(
+        private formBuilder: FormBuilder,
+        @Inject(MAT_DIALOG_DATA)
+        private data: any,
+        private secretaryService: SecretaryService,
+        public dialogRef: MatDialogRef<NewSecretaryComponent>,
+        private alert: AlertService
+    ) { }
 
     ngOnInit(): void {
-    }
 
-    salvarSecretaria(): void {
-        const objSecretaria: Secretary = {
-            name: this.secretariaFormGroup.get('nome').value,
-            responsible: this.secretariaFormGroup.get('responsavel').value,
-            background: this.secretariaFormGroup.get('fundo').value,
-            email: "String",
-            operator: "String",
+        this.secretariaFormGroup = this.formBuilder.group({
+            email: ['', [Validators.required, Validators.email]],
+            name: ['', Validators.required],
+            responsible: ['', Validators.required],
+        });
+
+        if (!!this.data) {
+            this.allSecretarys = this.data.allSecretarys;
+            console.log(this.allSecretarys)
+            if (!!this.data.currentSecretary) {
+                this.currentSecretary = this.data.currentSecretary;
+                this.setSecretaryEdit(this.currentSecretary);
+            }
+
         }
 
-        console.log(objSecretaria);
+    }
+
+    setSecretaryEdit(currentSecretary: Secretary): void {
+        this.secretariaFormGroup.get('name').setValue(currentSecretary.name);
+        this.secretariaFormGroup.get('responsible').setValue(currentSecretary.responsible);
+        this.secretariaFormGroup.get('email').setValue(currentSecretary.email);
+    }
+
+    validateIfSecretaryExists(): boolean {
+        const currentSecretaria = this.secretariaFormGroup.get('name').value;
+        return !!this.allSecretarys.find(x => x.name.toLowerCase() === currentSecretaria.toLowerCase()
+            && x.id !== this.currentSecretary?.id);
+    }
+
+    saveOrUpdate(): void {
+
+        if (this.validateIfSecretaryExists()) {
+            this.alert.sucess(`Secretaria informada, já encontra-se cadastrado.`);
+        } else if (this.secretariaFormGroup.valid) {
+            const secretary: Secretary = {
+                name: this.secretariaFormGroup.get('name').value,
+                email: this.secretariaFormGroup.get('email').value,
+                responsible: this.secretariaFormGroup.get('responsible').value,
+                operator: JSON.parse(localStorage.getItem('currentUser')).email
+            };
+
+            if (!!this.currentSecretary) {
+                this.secretaryService.updateSecretary(secretary, this.currentSecretary.id.toString())
+                    .subscribe(result => {
+                        this.alert.sucess('Secretaria editada com sucesso!');
+                        this.dialogRef.close(true);
+                    });
+            } else {
+
+                this.secretaryService.createSecretary(secretary)
+                    .subscribe(result => {
+                        this.alert.sucess('Secretaria salvo com sucesso!');
+                        this.dialogRef.close(true);
+                    });
+            }
+
+        }
+
+    }
+
+    close(): void {
+        this.dialogRef.close(false);
     }
 
 }

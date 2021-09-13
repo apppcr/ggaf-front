@@ -81,6 +81,7 @@ export class NavBarComponent implements OnInit, AfterViewInit {
 
     loadMenuAdm(): void {
         this.menuAdministration = [
+            { label: 'Secretaria', link: 'administrador/secretary' },
             { label: 'Localização', link: 'administrador/location' },
             { label: 'Produtos', link: 'administrador/product' },
             { label: 'Usuários', link: 'administrador/user' },
