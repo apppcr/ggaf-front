@@ -41,6 +41,7 @@ import { BrMaskerModule } from 'br-mask';
 import {
     DialogViewSolicitationComponent
 } from '../authenticated/operator/dialog-view-solicitation/dialog-view-solicitation.component';
+import { SpinnerOverlayComponent } from './components/spinner-overlay/spinner-overlay.component';
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import {
         HeaderComponent,
         FooterComponent,
 
-        DialogViewSolicitationComponent
+        DialogViewSolicitationComponent,
+         SpinnerOverlayComponent
     ],
     imports: [
         CommonModule,

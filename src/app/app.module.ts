@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -17,6 +17,7 @@ import { AnalystModule } from './authenticated/analyst/analyst.module';
 import { OperatorModule } from './authenticated/operator/operator.module';
 import { NotAuthenticatedModule } from './not-authenticated/not-authenticated.module';
 import { AdministratorModule } from './authenticated/administrator/administrator.module';
+import { SpinnerInterceptor } from './shared/SpinnerInterceptor';
 
 
 @NgModule({
@@ -40,7 +41,13 @@ import { AdministratorModule } from './authenticated/administrator/administrator
         AngularFireDatabaseModule,
         AngularFireAuthModule
     ],
-    providers: [],
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: SpinnerInterceptor,
+            multi: true,
+        },
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
