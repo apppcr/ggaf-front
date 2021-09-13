@@ -51,8 +51,6 @@ export class SecretaryComponent implements OnInit {
       secretary = this.allSecretarys.find(secretary => secretary.id === id);
     }
 
-    console.log(this.allSecretarys);
-
     const dialogRef = this.dialog.open(NewSecretaryComponent, {
       width: '600px',
       data: {
@@ -74,7 +72,7 @@ export class SecretaryComponent implements OnInit {
     this.secretaryService.findAllSecretary()
       .subscribe((result) => {
         if (result.length > 0) {
-          this.allSecretarys = result;
+          this.allSecretarys = result;      
           this.dataSource.data = [];
           this.dataSource.data = this.allSecretarys;
         }

@@ -38,7 +38,6 @@ export class NewSecretaryComponent implements OnInit {
 
         if (!!this.data) {
             this.allSecretarys = this.data.allSecretarys;
-            console.log(this.allSecretarys)
             if (!!this.data.currentSecretary) {
                 this.currentSecretary = this.data.currentSecretary;
                 this.setSecretaryEdit(this.currentSecretary);
@@ -65,11 +64,13 @@ export class NewSecretaryComponent implements OnInit {
         if (this.validateIfSecretaryExists()) {
             this.alert.sucess(`Secretaria informada, já encontra-se cadastrado.`);
         } else if (this.secretariaFormGroup.valid) {
+
             const secretary: Secretary = {
                 name: this.secretariaFormGroup.get('name').value,
                 email: this.secretariaFormGroup.get('email').value,
                 responsible: this.secretariaFormGroup.get('responsible').value,
-                operator: JSON.parse(localStorage.getItem('currentUser')).email
+                operator: JSON.parse(localStorage.getItem('currentUser')).email,
+                background: 'N/A'
             };
 
             if (!!this.currentSecretary) {
