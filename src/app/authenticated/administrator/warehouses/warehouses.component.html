@@ -4,7 +4,7 @@
 
     <br>
 
-    <button mat-raised-button color="primary" (click)="openDialogNewWareHouse()">Adicionar</button>
+    <button mat-raised-button color="primary" (click)="openDialogNewOrEditWareHouse()">Adicionar</button>
 
     <br>
 
@@ -38,7 +38,9 @@
         <ng-container matColumnDef="excluir">
             <th mat-header-cell *matHeaderCellDef> Excluir </th>
             <td mat-cell *matCellDef="let element">
-                <mat-icon>delete</mat-icon>
+                <mat-icon class="editButtonProduct" (click)="ruleDeleteWarehouse(element.id)">
+                    delete
+                </mat-icon>
             </td>
         </ng-container>
 
@@ -46,7 +48,9 @@
         <ng-container matColumnDef="editar">
             <th mat-header-cell *matHeaderCellDef> Editar </th>
             <td mat-cell *matCellDef="let element">
-                <mat-icon>edit</mat-icon>
+                <mat-icon class="editButtonProduct" (click)="editWarehouse(element.id)">
+                    edit
+                </mat-icon>
             </td>
         </ng-container>
 

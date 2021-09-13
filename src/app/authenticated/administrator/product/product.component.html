@@ -8,7 +8,7 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <button mat-raised-button color="primary" (click)="openDialogNewProduct()">Adicionar</button>
+            <button mat-raised-button color="primary" (click)="openDialogNewOrEditProduct()">Adicionar</button>
         </div>
     </div>
     <br>
@@ -51,14 +51,18 @@
         <ng-container matColumnDef="excluir">
             <th mat-header-cell *matHeaderCellDef> Excluir </th>
             <td mat-cell *matCellDef="let element">
-                <mat-icon>delete</mat-icon>
+                <mat-icon class="editButtonProduct" (click)="ruleDeleteProduct(element.id)">
+                    delete
+                </mat-icon>
             </td>
         </ng-container>
         <!-- Symbol Column -->
         <ng-container matColumnDef="editar">
             <th mat-header-cell *matHeaderCellDef> Editar </th>
             <td mat-cell *matCellDef="let element">
-                <mat-icon>edit</mat-icon>
+                <mat-icon class="editButtonProduct" (click)="editProduct(element.id)">
+                    edit
+                </mat-icon>
             </td>
         </ng-container>
 

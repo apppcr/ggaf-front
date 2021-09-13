@@ -37,12 +37,12 @@
             <div class="col-sm-8">
             </div>
             <div class="col-sm-2">
-                <button class="my-2 " mat-button mat-dialog-close>
+                <button class="my-2 " mat-button mat-dialog-close (click)="close()">
                     Fechar
                 </button>
             </div>
             <div class="col-sm-2">
-                <button mat-raised-button class="my-2 " color="primary" type="submit">
+                <button mat-raised-button class="my-2" (click)="saveOrUpdate()" color="primary" type="submit">
                     Salvar
                 </button>
             </div>
