@@ -81,7 +81,7 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
             registration: ['', Validators.required],
             requester: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
-            requestDate: [Validators.required],
+            requestDate: [''],
             zipCode: ['', [Validators.required, Validators.maxLength(9)]],
             address: ['', Validators.required],
             number: ['', Validators.required],
@@ -89,7 +89,7 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
             state: ['', Validators.required],
             complement: [''],
             district: ['', Validators.required],
-            wharehouse: ['', Validators.required],
+            wharehouse: [''],
             solicitationCurrenteUser: [2, Validators.required],
         });
 
@@ -172,7 +172,7 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
 
     ruleToSaveRequest(): void {
         this.removeRequeridValidator();
-
+        
         if (this.formRequestGroup.valid && this.productSolicitationSelected.length > 0) {
             this.alert.dialogWarning(
                 'Revise sua solicitação!',
@@ -184,8 +184,8 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
                     this.saveRequest();
                 }
             });
-        } else if (this.formAddProductGroup.valid && this.productSolicitationSelected.length === 0) {
-            this.alert.sucess('Favor adicionar pelo menos um produto.');
+        } else if (this.formRequestGroup.valid && this.productSolicitationSelected.length === 0) {
+            this.alert.warning('Favor adicionar pelo menos um produto.');
         }
     }
 
