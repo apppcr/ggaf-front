@@ -70,16 +70,16 @@
             <!-- Nome do Produto Column -->
             <ng-container matColumnDef="nomeProduto">
                 <th mat-header-cell *matHeaderCellDef> Nome do Produto </th>
-                <td mat-cell *matCellDef="let element">
-                    {{ getProductById(element.id_product).name}}
+                <td mat-cell *matCellDef="let element" [matTooltip]="getProductById(element.id_product).name">
+                    {{ getProductById(element.id_product).name | slice:0:40 }}
                 </td>
             </ng-container>
 
             <!-- Descrição do Produto Column -->
             <ng-container matColumnDef="descricaoProduto">
                 <th mat-header-cell *matHeaderCellDef> Descrição do Produto </th>
-                <td mat-cell *matCellDef="let element">
-                    {{ getProductById(element.id_product).description}}
+                <td mat-cell *matCellDef="let element" [matTooltip]="getProductById(element.id_product).description">
+                    {{ getProductById(element.id_product).description | slice:0:20 }}
                 </td>
             </ng-container>
 
@@ -93,7 +93,7 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
 
-        <mat-paginator align="end" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        <mat-paginator align="end" [pageSizeOptions]="[20, 50, 100]" showFirstLastButtons></mat-paginator>
     </div>
 
 

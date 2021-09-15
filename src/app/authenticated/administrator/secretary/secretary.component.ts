@@ -1,9 +1,11 @@
+
 import { Observable } from 'rxjs';
-import { Location } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+
+import 'rxjs/add/operator/catch';
 
 import { AlertService } from './../../../shared/alert.service';
 import { Secretary } from '../../../core/models/secretary.model';
@@ -17,7 +19,7 @@ import { SecretaryService } from './../../../shared/services/secretary.service';
 })
 export class SecretaryComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'name', 'responsible', 'email', 'excluir', 'editar'];
+  displayedColumns: string[] = ['id', 'name', 'responsible', 'excluir', 'editar'];
   dataSource = new MatTableDataSource<Secretary>();
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -72,7 +74,7 @@ export class SecretaryComponent implements OnInit {
     this.secretaryService.findAllSecretary()
       .subscribe((result) => {
         if (result.length > 0) {
-          this.allSecretarys = result;      
+          this.allSecretarys = result;
           this.dataSource.data = [];
           this.dataSource.data = this.allSecretarys;
         }
@@ -82,37 +84,46 @@ export class SecretaryComponent implements OnInit {
   editSecretary(id: number): void {
     this.openDialogNewOrEditSecretary(id);
   }
-  
+
   ruleDeleteSecretary(id: number): void {
     this.alert.dialogWarning(
-        'Tem certeza que deseja excluir essa Secretaria?',
-        'Você não poderá reverter isso!'
+      'Tem certeza que deseja excluir essa Secretaria?',
+      'Você não poderá reverter isso!',
+      'Sim, excluir!',
+      'Não, cancelar!'
     ).then(result => {
-            if (result.isConfirmed) {
-                this.deleteSecretary(id);
-            }
-        });
+      if (result.isConfirmed) {
+        this.deleteSecretary(id);
+      }
+    });
   }
 
   deleteSecretary(id: number): void {
-    this.secretaryService.deleteSecretary(id.toString())
-        .subscribe((result) => {
-            const secretary: any = this.allSecretarys.find(secretary => secretary.id === id);
-  
-            if (!!secretary && secretary.uid) {
-                this.secretaryService.deleteSecretary(secretary.uid)
-                    .subscribe((result) => {
-                        this.alert.sucess('Excluido com sucesso!');
-                        this.dataSource.data = [];
-                        this.reloadTableSecretary();
-                    });
-  
-            } else {
+
+    this.secretaryService.deleteSecretary(id)
+      .subscribe(
+        (result) => {
+          const secretary: any = this.allSecretarys
+            .find(secretary => secretary.id === id);
+
+          if (!!secretary && secretary.uid) {
+            this.secretaryService.deleteSecretary(secretary.uid)
+              .subscribe((result) => {
                 this.alert.sucess('Excluido com sucesso!');
                 this.dataSource.data = [];
                 this.reloadTableSecretary();
-            }
-  
-        });
+              });
+
+          } else {
+            this.alert.sucess('Excluido com sucesso!');
+            this.dataSource.data = [];
+            this.reloadTableSecretary();
+          }
+
+        }, (err: any) => {
+          this.alert.warning('Para excluir essa secretária, será necessário desvincular a mesma do(s) usuário(s) cadastrado(s).');
+          console.log("aqui", err);
+        }
+      );
   }
 }

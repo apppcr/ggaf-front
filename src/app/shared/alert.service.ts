@@ -27,7 +27,7 @@ export class AlertService {
         })
     }
 
-    dialogWarning(title: string, text: string): any {
+    dialogWarning(title: string, text: string, textConfirmButton: string, textCancelButton: string): any {
         return Swal.fire({
             title: title,
             text: text,
@@ -35,9 +35,9 @@ export class AlertService {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim, excluir!',
-            cancelButtonText: 'Não, cancelar!'
-        })
+            confirmButtonText: textConfirmButton,
+            cancelButtonText: textCancelButton
+        });
     }
 
     warning(message: string): void {

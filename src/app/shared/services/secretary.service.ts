@@ -1,6 +1,7 @@
-import { HttpHeaders } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { Secretary } from '../../core/models/secretary.model';
 import { environment } from './../../../environments/environment';
@@ -26,8 +27,14 @@ export class SecretaryService {
         return this.requestService.Post(`${environment.apiEndpoint.api}/secretary/updateSecretary/${id}`, secretary);
     }
 
-    deleteSecretary(id: string): Observable<any> {
-        return this.requestService.Delete(`${environment.apiEndpoint.api}/secretary/deleteSecretary/${id}`);
+    deleteSecretary(id: number): Observable<any> {
+        return this.requestService
+            .Delete(`${environment.apiEndpoint.api}/secretary/deleteSecretary/${id}`)
+            .pipe(catchError(this.erroHandler));;
+    }
+
+    erroHandler(error: HttpErrorResponse) {
+        return throwError(error.message || 'server Error');
     }
 
 }

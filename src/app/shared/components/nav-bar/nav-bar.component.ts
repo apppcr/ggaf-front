@@ -81,7 +81,7 @@ export class NavBarComponent implements OnInit, AfterViewInit {
 
     loadMenuAdm(): void {
         this.menuAdministration = [
-            { label: 'Secretaria', link: 'administrador/secretary' },
+            { label: 'Secretária', link: 'administrador/secretary' },
             { label: 'Localização', link: 'administrador/location' },
             { label: 'Produtos', link: 'administrador/product' },
             { label: 'Usuários', link: 'administrador/user' },
@@ -108,10 +108,10 @@ export class NavBarComponent implements OnInit, AfterViewInit {
 
     linkHomeByProfile(currentIdProfile: number): void {
 
-        const nameProfile = this.allProfile.find(x => x.id === currentIdProfile).name;
+        const nameProfile = this.allProfile?.find(x => x.id === currentIdProfile).name;
 
         if (!!nameProfile) {
-            this.urlHome = this.routeByProfile.find(x => x.name === nameProfile).link
+            this.urlHome = this.routeByProfile?.find(x => x.name === nameProfile).link
         }
     }
 

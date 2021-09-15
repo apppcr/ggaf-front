@@ -86,7 +86,9 @@ export class LocationComponent implements OnInit {
   ruleDeleteLocation(id: number): void {
     this.alert.dialogWarning(
       'Tem certeza que deseja excluir esse Localização?',
-      'Você não poderá reverter isso!'
+      'Você não poderá reverter isso!',
+      'Sim, excluir!',
+      'Não, cancelar!'
     ).then(result => {
       if (result.isConfirmed) {
         this.deleteLocation(id);
@@ -113,7 +115,11 @@ export class LocationComponent implements OnInit {
           this.reloadTableLocation();
         }
 
-      });
+      }, (err: any) => {
+        this.alert.warning('Para excluir essa secretária, será necessário desvincular a mesma do(s) usuário(s) cadastrado(s).');
+        console.log("aqui", err);
+      }
+      );
   }
 
 }

@@ -1,8 +1,11 @@
 <mat-card>
     <div class="container">
 
+        <h1>Nova Solicitação</h1>
+        <hr>
+
         <form [formGroup]="formRequestGroup" class="my-5">
-            <h1>Solicitante</h1>
+            <h2>Solicitante</h2>
 
             <div class="row">
                 <div class="col-sm-12">
@@ -46,7 +49,7 @@
                 </div>
             </div>
 
-            <h1>Endereço</h1>
+            <h2>Endereço</h2>
 
             <div class="row">
                 <div class="col-sm-3">
@@ -105,30 +108,31 @@
                 </div>
             </div>
 
-            <h1>Adicionar Produto</h1>
+            <h2>Adicionar Produto</h2>
 
             <form [formGroup]="formAddProductGroup">
                 <div class="row">
 
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <mat-form-field appearance="outline" class="width-input">
                             <mat-label>CADUM</mat-label>
-                            <input matInput placeholder="CADUM" formControlName="cadum">
+                            <input matInput placeholder="CADUM" formControlName="cadum" (change)="getProductByCadum()">
                         </mat-form-field>
                     </div>
 
-                    <div class="col-sm-4">
+                    <div class="col-sm-6">
                         <mat-form-field appearance="outline" class="width-input">
                             <mat-label>Produto</mat-label>
-                            <mat-select formControlName="product">
-                                <mat-option *ngFor="let item of allproducts" [value]="item.id">
-                                    {{item.name}}
+                            <input type="text" matInput [formControl]="controlProduct" [matAutocomplete]="auto" (change)="getCadumByNameProduct()">
+                            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                                <mat-option *ngFor="let option of filteredOptions | async" [value]="option.name" (click)="getCadumByNameProduct()">
+                                    {{option.name}}
                                 </mat-option>
-                            </mat-select>
+                            </mat-autocomplete>
                         </mat-form-field>
                     </div>
 
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <mat-form-field appearance="outline" class="width-input">
                             <mat-label>Quantidade</mat-label>
                             <input matInput placeholder="Quantidade" type="number" formControlName="amount">
@@ -155,16 +159,16 @@
                     <!-- Nome do Produto Column -->
                     <ng-container matColumnDef="nomeProduto">
                         <th mat-header-cell *matHeaderCellDef> Nome do Produto </th>
-                        <td mat-cell *matCellDef="let element">
-                            {{ getProductById(element.id_product).name}}
+                        <td mat-cell *matCellDef="let element" [matTooltip]="getProductById(element.id_product).name">
+                            {{ getProductById(element.id_product).name | slice:0:40 }}
                         </td>
                     </ng-container>
 
                     <!-- Descrição do Produto Column -->
                     <ng-container matColumnDef="descricaoProduto">
                         <th mat-header-cell *matHeaderCellDef> Descrição do Produto </th>
-                        <td mat-cell *matCellDef="let element">
-                            {{ getProductById(element.id_product).description}}
+                        <td mat-cell *matCellDef="let element" [matTooltip]="getProductById(element.id_product).description">
+                            {{ getProductById(element.id_product).description | slice:0:20 }}
                         </td>
                     </ng-container>
 
@@ -195,7 +199,7 @@
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
 
-                <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                <mat-paginator [pageSizeOptions]="[20, 50, 100]" showFirstLastButtons></mat-paginator>
             </div>
 
             <div class="row">

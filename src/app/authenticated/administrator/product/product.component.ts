@@ -91,7 +91,9 @@ export class ProductComponent implements OnInit {
     ruleDeleteProduct(id: number): void {
         this.alert.dialogWarning(
             'Tem certeza que deseja excluir esse Produto?',
-            'Você não poderá reverter isso!'
+            'Você não poderá reverter isso!',
+            'Sim, excluir!',
+            'Não, cancelar!'
         ).then(result => {
             if (result.isConfirmed) {
                 this.deleteProduct(id);

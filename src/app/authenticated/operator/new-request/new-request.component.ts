@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { EMPTY, Observable } from 'rxjs';
@@ -10,7 +10,7 @@ import {
     Endereco,
     CEPError,
 } from "@brunoc/ngx-viacep";
-import { catchError } from 'rxjs/operators';
+import { catchError, map, startWith } from 'rxjs/operators';
 
 import { User } from '../../../core/models/user.model';
 import { Email } from '../../../core/models/email.model';
@@ -26,7 +26,8 @@ import { ProfileService } from './../../../shared/services/profile.service';
 import { ProductService } from './../../../shared/services/product.service';
 import { SolicitationService } from './../../../shared/services/solicitation.service';
 import { ProductSolicitationService } from './../../../shared/services/product-solicitation.service';
-import { environment } from 'src/environments/environment';
+
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'app-new-request',
@@ -50,18 +51,22 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
 
     productSolicitationSelected: ProductSolicitation[] = [];
 
+    controlProduct = new FormControl();
+    options: Product[] = [];
+    filteredOptions: Observable<Product[]>;
+
     constructor(
         private formBuilder: FormBuilder,
         private viacep: NgxViacepService,
         private router: Router,
 
+        private alert: AlertService,
         private userService: UserService,
+        private emailService: EmailService,
         private profileService: ProfileService,
         private productService: ProductService,
         private solicitationService: SolicitationService,
         private productSolicitationService: ProductSolicitationService,
-        private alert: AlertService,
-        private emailService: EmailService
     ) { }
 
     ngAfterViewInit() {
@@ -70,6 +75,7 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.controlProduct.setValidators(Validators.required);
 
         this.formRequestGroup = this.formBuilder.group({
             registration: ['', Validators.required],
@@ -89,8 +95,7 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
 
         this.formAddProductGroup = this.formBuilder.group({
             cadum: ['', Validators.required],
-            amount: ['', Validators.required],
-            product: ['', Validators.required],
+            amount: ['', Validators.required]
         });
 
         Observable.forkJoin([
@@ -100,12 +105,24 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
         ]).subscribe((result) => {
             if (result[0].length > 0) {
                 this.allproducts = result[0];
+                this.options = result[0];
             }
 
             if (result[2].length > 0) {
                 this.currentUser = result[2][0];
             }
         });
+
+        this.filteredOptions = this.controlProduct.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filter(value))
+        );
+
+
+    }
+    private _filter(value: string): Product[] {
+        const filterValue = value?.toLowerCase();
+        return this.options.filter(option => option.name.toLowerCase().includes(filterValue));
     }
 
     getProductById(id: number): Product {
@@ -114,13 +131,14 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
 
     addProduct(): void {
 
-        if (this.formAddProductGroup.valid) {
-            // SALVAR ESSES DADOS NO BACKEND, DEPOIS QUE SALVAR A SOLICITACAO
+        if (this.formAddProductGroup.valid && this.controlProduct.valid) {
+
+            const currentIdProduct = this.findProductByName(this.controlProduct.value).id;
             const itemRequest: ProductSolicitation = {
-                id_product: parseInt(this.formAddProductGroup.get('product').value, 10),
+                id_product: currentIdProduct,
                 cadum: this.formAddProductGroup.get('cadum').value,
                 amount: this.formAddProductGroup.get('amount').value,
-                operator: "string",
+                operator: this.currentUser.email
             }
 
             this.productSolicitationSelected.push(itemRequest);
@@ -128,14 +146,14 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
             this.dataSource.data = this.productSolicitationSelected;
 
             this.formAddProductGroup.reset();
+            this.controlProduct.reset();
         }
 
     }
 
     editProductSolicitation(idProduto: number): void {
-
         const currenteProduct: ProductSolicitation = this.productSolicitationSelected.find(pss => pss.id_product === idProduto);
-        this.formAddProductGroup.get('product').setValue(currenteProduct.id_product);
+        this.controlProduct.setValue(this.getProductById(currenteProduct.id_product).name);
         this.formAddProductGroup.get('cadum').setValue(currenteProduct.cadum);
         this.formAddProductGroup.get('amount').setValue(currenteProduct.amount);
 
@@ -143,7 +161,6 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
 
         this.dataSource.data = [];
         this.dataSource.data = this.productSolicitationSelected;
-
     }
 
     deleteProductSolicitation(idProduto: number): void {
@@ -156,8 +173,17 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
     ruleToSaveRequest(): void {
         this.removeRequeridValidator();
 
-        if (this.formAddProductGroup.valid && this.productSolicitationSelected.length > 0) {
-            this.saveRequest();
+        if (this.formRequestGroup.valid && this.productSolicitationSelected.length > 0) {
+            this.alert.dialogWarning(
+                'Revise sua solicitação!',
+                'Você deseja revisar sua solicitação? Após salvar você não podera modificar o pedido.',
+                'Salvar',
+                'Revisar'
+            ).then(result => {
+                if (result.isConfirmed) {
+                    this.saveRequest();
+                }
+            });
         } else if (this.formAddProductGroup.valid && this.productSolicitationSelected.length === 0) {
             this.alert.sucess('Favor adicionar pelo menos um produto.');
         }
@@ -241,11 +267,14 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
     }
 
     removeRequeridValidator(): void {
-        const inputs = ['cadum', 'amount', 'product'];
+        const inputs = ['cadum', 'amount'];
         inputs.forEach(item => {
             this.formAddProductGroup.get(item).setValidators([]);
             this.formAddProductGroup.get(item).updateValueAndValidity();
         });
+
+        this.controlProduct.setValidators([]);
+        this.controlProduct.updateValueAndValidity();
     }
 
     searchCep(): void {
@@ -286,5 +315,21 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
             this.formRequestGroup.get('registration').setValue('');
             this.formRequestGroup.get('email').setValue('');
         }
+    }
+
+    getProductByCadum(): void {
+        const currentCadum = this.formAddProductGroup.get('cadum').value;
+        const currentProduct = this.allproducts.find(x => x.cadum?.toLowerCase() === currentCadum?.toLowerCase())?.name;
+        this.controlProduct.setValue(currentProduct);
+    }
+
+    findProductByName(name: string): Product {
+        return this.allproducts.find(x => x.name.toLowerCase() === name.toLowerCase())
+    }
+
+    getCadumByNameProduct(): void {
+        const nameProduct = this.controlProduct.value;
+        const currentCadum = this.findProductByName(nameProduct)?.cadum;
+        this.formAddProductGroup.get('cadum').setValue(currentCadum);
     }
 }

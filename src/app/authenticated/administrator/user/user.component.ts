@@ -136,7 +136,9 @@ export class UserComponent implements OnInit {
     ruleDeleteSecretary(id: number, email: string): void {
         this.alert.dialogWarning(
             'Tem certeza que deseja excluir esse usuário?',
-            'Você não poderá reverter isso!'
+            'Você não poderá reverter isso!',
+            'Sim, excluir!',
+            'Não, cancelar!'
         ).then(result => {
                 if (result.isConfirmed) {
                     this.deleteSecretary(id, email);

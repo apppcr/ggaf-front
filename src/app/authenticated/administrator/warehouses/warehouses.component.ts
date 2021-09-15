@@ -95,7 +95,9 @@ editWarehouse(id: number): void {
 ruleDeleteWarehouse(id: number): void {
   this.alert.dialogWarning(
       'Tem certeza que deseja excluir esse Almoxarifado?',
-      'Você não poderá reverter isso!'
+      'Você não poderá reverter isso!',
+      'Sim, excluir!',
+      'Não, cancelar!'
   ).then(result => {
           if (result.isConfirmed) {
               this.deleteWarehouse(id);

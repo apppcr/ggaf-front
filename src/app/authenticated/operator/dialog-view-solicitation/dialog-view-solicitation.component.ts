@@ -51,16 +51,16 @@ export class DialogViewSolicitationComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA)
         private data: any,
         private productSolicitationService: ProductSolicitationService,
-        private solicitationService: SolicitationService,
-        private productService: ProductService,
+        private solicitationService: SolicitationService
     ) { }
 
     ngOnInit(): void {
 
+        this.allproducts = this.data?.allproducts;
+
         Observable.forkJoin([
             this.solicitationService.findSolicitationById(this.data.idSolicitation),
             this.productSolicitationService.findProductSolicitationById(this.data.idSolicitation),
-            this.productService.getAllProduct(),
         ]).subscribe((result) => {
 
             if (result[0].length > 0) {
@@ -84,9 +84,6 @@ export class DialogViewSolicitationComponent implements OnInit {
                 this.dataSource.data = result[1];
             }
 
-            if (result[2].length > 0) {
-                this.allproducts = result[2];
-            }
         });
     }
 

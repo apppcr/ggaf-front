@@ -8,10 +8,12 @@ import 'rxjs/add/observable/forkJoin';
 import { SolicitationService } from './../../../shared/services/solicitation.service';
 import { WharehouseService } from './../../../shared/services/wharehouse.service';
 import { SecretaryService } from './../../../shared/services/secretary.service';
+import { ProductService } from './../../../shared/services/product.service';
 
 import { Solicitation } from '../../../core/models/solicitation.model';
 import { Wharehouse } from '../../../core/models/wharehouse.model';
 import { Secretary } from '../../../core/models/secretary.model';
+import { Product } from '../../../core/models/product.model';
 import { User } from '../../../core/models/user.model';
 
 import {
@@ -31,6 +33,7 @@ export class MyRequestsComponent implements OnInit {
     allSocitation: Solicitation[];
     allSecretary: Secretary[];
     allWharehouse: Wharehouse[];
+    allproducts: Product[] = [];
 
     currentUser: User;
 
@@ -40,6 +43,8 @@ export class MyRequestsComponent implements OnInit {
         private SecretaryService: SecretaryService,
         private wharehouseService: WharehouseService,
         private solicitationService: SolicitationService,
+        private productService: ProductService,
+
     ) { }
 
     ngOnInit(): void {
@@ -48,7 +53,8 @@ export class MyRequestsComponent implements OnInit {
         Observable.forkJoin([
             this.solicitationService.findSolicitationByEmail(this.currentUser.email),
             this.SecretaryService.findAllSecretary(),
-            this.wharehouseService.findAllWharehouse()
+            this.wharehouseService.findAllWharehouse(),
+            this.productService.getAllProduct(),
         ]).subscribe((result) => {
 
             if (result[0].length > 0) {
@@ -64,6 +70,10 @@ export class MyRequestsComponent implements OnInit {
                 this.allWharehouse = result[2];
             }
 
+            if (result[2].length > 0) {
+                this.allproducts = result[3];
+            }
+
         });
 
     }
@@ -72,7 +82,8 @@ export class MyRequestsComponent implements OnInit {
         const dialogRef = this.dialog.open(DialogViewSolicitationComponent, {
             width: '800px',
             data: {
-                idSolicitation: id
+                idSolicitation: id,
+                allproducts: this.allproducts
             }
         });
 

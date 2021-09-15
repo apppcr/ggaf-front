@@ -31,7 +31,6 @@ export class NewSecretaryComponent implements OnInit {
     ngOnInit(): void {
 
         this.secretariaFormGroup = this.formBuilder.group({
-            email: ['', [Validators.required, Validators.email]],
             name: ['', Validators.required],
             responsible: ['', Validators.required],
         });
@@ -48,7 +47,6 @@ export class NewSecretaryComponent implements OnInit {
     setSecretaryEdit(currentSecretary: Secretary): void {
         this.secretariaFormGroup.get('name').setValue(currentSecretary.name);
         this.secretariaFormGroup.get('responsible').setValue(currentSecretary.responsible);
-        this.secretariaFormGroup.get('email').setValue(currentSecretary.email);
     }
 
     validateIfSecretaryExists(): boolean {
@@ -58,33 +56,35 @@ export class NewSecretaryComponent implements OnInit {
     }
 
     saveOrUpdate(): void {
+        if (this.secretariaFormGroup.valid) {
 
-        if (this.validateIfSecretaryExists()) {
-            this.alert.sucess(`Secretaria informada, já encontra-se cadastrado.`);
-        } else if (this.secretariaFormGroup.valid) {
-
-            const secretary: Secretary = {
-                name: this.secretariaFormGroup.get('name').value,
-                email: this.secretariaFormGroup.get('email').value,
-                responsible: this.secretariaFormGroup.get('responsible').value,
-                operator: JSON.parse(localStorage.getItem('currentUser')).email,
-                background: 'N/A'
-            };
-
-            if (!!this.currentSecretary) {
-                this.secretaryService.updateSecretary(secretary, this.currentSecretary.id.toString())
-                    .subscribe(result => {
-                        this.alert.sucess('Secretaria editada com sucesso!');
-                        this.dialogRef.close(true);
-                    });
+            if (this.validateIfSecretaryExists()) {
+                this.alert.sucess(`Secretaria informada, já encontra-se cadastrado.`);
             } else {
+                const secretary: Secretary = {
+                    name: this.secretariaFormGroup.get('name').value,
+                    responsible: this.secretariaFormGroup.get('responsible').value,
+                    operator: JSON.parse(localStorage.getItem('currentUser')).email,
+                };
 
-                this.secretaryService.createSecretary(secretary)
-                    .subscribe(result => {
-                        this.alert.sucess('Secretaria salvo com sucesso!');
-                        this.dialogRef.close(true);
-                    });
+                if (!!this.currentSecretary) {
+                    this.secretaryService.updateSecretary(secretary, this.currentSecretary.id.toString())
+                        .subscribe(result => {
+                            this.alert.sucess('Secretaria editada com sucesso!');
+                            this.dialogRef.close(true);
+                        });
+                } else {
+
+                    this.secretaryService.createSecretary(secretary)
+                        .subscribe(result => {
+                            this.alert.sucess('Secretaria salvo com sucesso!');
+                            this.dialogRef.close(true);
+                        });
+                }
             }
+
+        } else {
+            this.alert.warning('Favor preencher todos os campos.');
         }
     }
 
