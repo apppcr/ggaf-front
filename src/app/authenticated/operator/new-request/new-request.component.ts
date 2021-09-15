@@ -225,17 +225,17 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
 
     createTextEmail(solicitation: Solicitation, productSolicitation: ProductSolicitation[]): string {
         const products = [];
-        let msg = `Sua requisição de número ${solicitation.request_number} foi criada com sucesso! \n\n`;
+        let msg = `Sua requisição de número ${solicitation.request_number} foi criada com sucesso! \n \n Segue os detalhes do seu pedido: \n \n`;
 
         if (productSolicitation.length > 0) {
             productSolicitation.forEach((x: ProductSolicitation) => {
-                const msgProduct = `\n CADUM: ${x.cadum} | Nome do Produtor: ${this.getProductById(x.id_product).name} | Descrição: ${this.getProductById(x.id_product).description} | Quantidade: ${x.amount}`
+                const msgProduct = `CADUM: ${x.cadum}\nNome do Produtor: ${this.getProductById(x.id_product).name}\nQuantidade: ${x.amount}\n\n`
                 products.push(msgProduct);
             });
         }
 
         msg += products.join().replace(/,/g, ' ');
-        msg += `\n\n Para mais detalhes acesse ${environment.linkSystem}.`;
+        msg += `\n Para mais detalhes acesse ${environment.linkSystem}.`;
 
         return msg;
     }

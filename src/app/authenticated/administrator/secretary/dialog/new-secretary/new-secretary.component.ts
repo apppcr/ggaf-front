@@ -43,9 +43,7 @@ export class NewSecretaryComponent implements OnInit {
                 this.currentSecretary = this.data.currentSecretary;
                 this.setSecretaryEdit(this.currentSecretary);
             }
-
         }
-
     }
 
     setSecretaryEdit(currentSecretary: Secretary): void {
@@ -86,13 +84,10 @@ export class NewSecretaryComponent implements OnInit {
                         this.dialogRef.close(true);
                     });
             }
-
         }
-
     }
 
     close(): void {
         this.dialogRef.close(false);
     }
-
 }

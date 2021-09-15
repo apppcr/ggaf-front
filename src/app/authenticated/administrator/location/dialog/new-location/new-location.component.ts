@@ -70,8 +70,9 @@ export class NewLocationComponent implements OnInit {
   }
 
   validateIfLocationExists(): boolean {
+
     const currentLocal = this.formNewLocation.get('local').value;
-    return !!this.allLocations.find(x => x.name.toLowerCase() === currentLocal.toLowerCase()
+    return !!this.allLocations.find(x => x.local.toUpperCase() === currentLocal.toUpperCase()
       && x.id !== this.currentLocation.id);
   }
 
@@ -101,14 +102,14 @@ export class NewLocationComponent implements OnInit {
       } else {
 
         const locationCurrent: Location = {
-          local: location.local,
-          address: location.address,
-          city: location.city,
-          state: location.state,
-          zip_code: location.zip_code,
-          district: location.district,
-          complement: location.complement,
-          number: location.number,
+          local: this.formNewLocation.get('local').value,
+          address: this.formNewLocation.get('address').value,
+          city: this.formNewLocation.get('city').value,
+          state: this.formNewLocation.get('state').value,
+          zip_code: this.formNewLocation.get('zip_code').value,
+          district: this.formNewLocation.get('district').value,
+          complement: this.formNewLocation.get('complement').value,
+          number: this.formNewLocation.get('number').value,
           operator: JSON.parse(localStorage.getItem('currentUser')).email
         };
 
@@ -131,26 +132,26 @@ export class NewLocationComponent implements OnInit {
     const cep = this.formNewLocation.get('zip_code').value;
 
     this.viacep
-        .buscarPorCep(cep.replace('-', ''))
-        .pipe(
-            catchError((error: CEPError) => {
-                // Ocorreu algum erro :/
-                console.log(error.message);
-                return EMPTY;
-            })
-        )
-        .subscribe((endereco: Endereco) => {
-            this.formNewLocation.get('address').disable();
-            this.formNewLocation.get('district').disable();
-            this.formNewLocation.get('city').disable();
-            this.formNewLocation.get('state').disable();
+      .buscarPorCep(cep.replace('-', ''))
+      .pipe(
+        catchError((error: CEPError) => {
+          // Ocorreu algum erro :/
+          console.log(error.message);
+          return EMPTY;
+        })
+      )
+      .subscribe((endereco: Endereco) => {
+        this.formNewLocation.get('address').disable();
+        this.formNewLocation.get('district').disable();
+        this.formNewLocation.get('city').disable();
+        this.formNewLocation.get('state').disable();
 
-            this.formNewLocation.get('address').setValue(endereco.logradouro);
-            this.formNewLocation.get('district').setValue(endereco.bairro);
-            this.formNewLocation.get('city').setValue(endereco.localidade);
-            this.formNewLocation.get('state').setValue(endereco.uf);
-        });
+        this.formNewLocation.get('address').setValue(endereco.logradouro);
+        this.formNewLocation.get('district').setValue(endereco.bairro);
+        this.formNewLocation.get('city').setValue(endereco.localidade);
+        this.formNewLocation.get('state').setValue(endereco.uf);
+      });
 
-}
+  }
 
 }
