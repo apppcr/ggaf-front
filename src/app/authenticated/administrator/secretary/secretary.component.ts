@@ -72,7 +72,7 @@ export class SecretaryComponent implements OnInit {
     this.secretaryService.findAllSecretary()
       .subscribe((result) => {
         if (result.length > 0) {
-          this.allSecretarys = result;
+          this.allSecretarys = result;      
           this.dataSource.data = [];
           this.dataSource.data = this.allSecretarys;
         }
