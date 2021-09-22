@@ -40,11 +40,11 @@ export class MyRequestsComponent implements OnInit {
     constructor(
         private router: Router,
         private dialog: MatDialog,
+
+        private productService: ProductService,
         private SecretaryService: SecretaryService,
         private wharehouseService: WharehouseService,
         private solicitationService: SolicitationService,
-        private productService: ProductService,
-
     ) { }
 
     ngOnInit(): void {
@@ -70,7 +70,7 @@ export class MyRequestsComponent implements OnInit {
                 this.allWharehouse = result[2];
             }
 
-            if (result[2].length > 0) {
+            if (result[3].length > 0) {
                 this.allproducts = result[3];
             }
 

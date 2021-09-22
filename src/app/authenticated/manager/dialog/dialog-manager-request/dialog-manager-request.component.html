@@ -1,0 +1,69 @@
+<h1 mat-dialog-title>Gerenciar Requisição - {{request_number}}</h1>
+<mat-dialog-content class="mat-typography">
+    <hr>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                Status: {{status}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                Data: {{date_request | date:'dd/MM/yyyy HH:mm:ss'}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                Matrícula: {{registration}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                Solicitante: {{requester}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                E-mail: {{email}}
+            </div>
+        </div>
+
+        <br>
+
+        <form [formGroup]="formManager">
+
+            <div class="row">
+                <h3>Você deseja aprovar essa requisição?</h3>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <mat-form-field appearance="outline" class="width-input">
+                        <mat-label>Deseja aprovar?</mat-label>
+                        <mat-select formControlName="approve">
+                            <mat-option value="Sim"> Sim </mat-option>
+                            <mat-option value="Não"> Não </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <mat-form-field appearance="outline" class="width-input">
+                        <mat-label>Observação</mat-label>
+                        <textarea formControlName="observation" matInput></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <mat-dialog-actions align="end">
+                <button mat-button mat-dialog-close>Cancelar</button>
+                <button type="submit" mat-button cdkFocusInitial (click)="toApprove()">Ok</button>
+            </mat-dialog-actions>
+
+        </form>
+
+    </div>
+
+
+</mat-dialog-content>

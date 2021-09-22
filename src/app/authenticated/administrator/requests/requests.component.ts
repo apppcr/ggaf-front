@@ -9,8 +9,10 @@ import { FilterSolicitation } from '../../../core/models/filter/filter-solicitat
 import { Solicitation } from '../../../core/models/solicitation.model';
 import { Wharehouse } from '../../../core/models/wharehouse.model';
 import { Secretary } from '../../../core/models/secretary.model';
+import { Product } from '../../../core/models/product.model';
 import { User } from '../../../core/models/user.model';
 
+import { ProductService } from '../../../shared/services/product.service';
 import { LocationService } from '../../../shared/services/location.service';
 import { SecretaryService } from '../../../shared/services/secretary.service';
 import { WharehouseService } from '../../../shared/services/wharehouse.service';
@@ -39,6 +41,7 @@ export class RequestsComponent implements OnInit {
     allLocation: Location[];
     allSecretary: Secretary[];
     allWharehouse: Wharehouse[];
+    allproducts: Product[] = [];
     allSocitation: Solicitation[];
 
     currentUser: User;
@@ -54,11 +57,13 @@ export class RequestsComponent implements OnInit {
 
     constructor(
         private dialog: MatDialog,
+        private formBuilder: FormBuilder,
+
+        private productService: ProductService,
+        private locationService: LocationService,
         private secretaryService: SecretaryService,
         private wharehouseService: WharehouseService,
         private solicitationService: SolicitationService,
-        private locationService: LocationService,
-        private formBuilder: FormBuilder
     ) { }
 
     ngOnInit(): void {
@@ -84,7 +89,8 @@ export class RequestsComponent implements OnInit {
             this.solicitationService.findAllSolicitation(),
             this.secretaryService.findAllSecretary(),
             this.wharehouseService.findAllWharehouse(),
-            this.locationService.getAllLocation()
+            this.locationService.getAllLocation(),
+            this.productService.getAllProduct()
         ]).subscribe((result) => {
 
             if (result[0].length > 0) {
@@ -108,6 +114,10 @@ export class RequestsComponent implements OnInit {
                 this.allLocation = result[3];
             }
 
+            if (result[4].length > 0) {
+                this.allproducts = result[4];
+            }
+
         });
     }
 
@@ -127,7 +137,8 @@ export class RequestsComponent implements OnInit {
         const dialogRef = this.dialog.open(DialogViewSolicitationComponent, {
             width: '800px',
             data: {
-                idSolicitation: id
+                idSolicitation: id,
+                allproducts: this.allproducts
             }
         });
 
@@ -141,7 +152,8 @@ export class RequestsComponent implements OnInit {
             width: '800px',
             data: {
                 idSolicitation: id,
-                allWharehouse: this.allWharehouse
+                allWharehouse: this.allWharehouse,
+                allproducts: this.allproducts
             }
         });
 

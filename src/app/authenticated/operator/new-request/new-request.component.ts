@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { EMPTY, Observable } from 'rxjs';
@@ -172,7 +172,7 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
 
     ruleToSaveRequest(): void {
         this.removeRequeridValidator();
-        
+
         if (this.formRequestGroup.valid && this.productSolicitationSelected.length > 0) {
             this.alert.dialogWarning(
                 'Revise sua solicitação!',
@@ -234,7 +234,7 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
                                             from: solicitation.email,
                                             to: [solicitation.email],
                                             subject: `GGAF - Requisição número ${solicitation.request_number}`,
-                                            text: this.createTextEmail(solicitation, currentProductSolicitation)
+                                            html: this.createTextEmail(solicitation, currentProductSolicitation)
                                         }
 
                                         this.emailService.send(email)
@@ -250,20 +250,54 @@ export class NewRequestComponent implements OnInit, AfterViewInit {
     }
 
     createTextEmail(solicitation: Solicitation, productSolicitation: ProductSolicitation[]): string {
-        const products = [];
-        let msg = `Sua requisição de número ${solicitation.request_number} foi criada com sucesso! \n \n Segue os detalhes do seu pedido: \n \n`;
+        let msg = `Sua requisição de número ${solicitation.request_number} foi criada com sucesso! <br><br>`;
+
+        msg += 'Segue os detalhes do seu pedido: <br>';
+
+        msg += '<h4>PRODUTOS</h4>';
 
         if (productSolicitation.length > 0) {
-            productSolicitation.forEach((x: ProductSolicitation) => {
-                const msgProduct = `CADUM: ${x.cadum}\nNome do Produtor: ${this.getProductById(x.id_product).name}\nQuantidade: ${x.amount}\n\n`
-                products.push(msgProduct);
-            });
+            msg += this.createTableProducts(productSolicitation);
         }
+        
+        msg += '<h4>DADOS DO REQUERENTE </h4>';
+        msg += `Nome: ${solicitation.requester}<br>`;
+        msg += `E-mail: ${solicitation.email}<br>`;
 
-        msg += products.join().replace(/,/g, ' ');
-        msg += `\n Para mais detalhes acesse ${environment.linkSystem}.`;
+        msg += '<h4>ENDEREÇO DE ENTREGA</h4>';
+
+        msg += `<p> ${solicitation.address}, ${solicitation.number} - ${solicitation.district} 
+        <br> ${solicitation.city} - ${solicitation.state}, ${solicitation.zip_code} </p> `
+
+        msg += `<br> Para mais detalhes acesse ${environment.linkSystem}.`;
 
         return msg;
+    }
+
+    createTableProducts(productSolicitation: ProductSolicitation[]): string {
+
+        const products = [];
+
+        productSolicitation.forEach((x: ProductSolicitation) => {
+            const msgProduct = `
+            <tr>
+                <td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${x.cadum}</td>
+                <td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${this.getProductById(x.id_product).name}</td>
+                <td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${x.amount}</td>
+            </tr>
+            `;
+            products.push(msgProduct);
+        });
+
+        let table = `<table style="border-collapse: collapse; width: 60%;">
+                        <tr>
+                            <th style="border: 1px solid #dddddd; text-align: left; padding: 8px;">CADUM</th>
+                            <th style="border: 1px solid #dddddd; text-align: left; padding: 8px;">Nome do Produto</th>
+                            <th style="border: 1px solid #dddddd; text-align: left; padding: 8px;">Quantidade</th>
+                        </tr>
+                        ${products.join().replace(/,/g, ' ')}
+                    </table>`;
+        return table;
     }
 
     removeRequeridValidator(): void {

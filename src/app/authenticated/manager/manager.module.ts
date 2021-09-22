@@ -6,11 +6,13 @@ import {
 } from './manager-requests/manager-requests.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ManagerRoutingModule } from './manager-routing.module';
+import { DialogManagerRequestComponent } from './dialog/dialog-manager-request/dialog-manager-request.component';
 
 
 @NgModule({
     declarations: [
-        ManagerRequestsComponent
+        ManagerRequestsComponent,
+        DialogManagerRequestComponent
     ],
     imports: [
         CommonModule,

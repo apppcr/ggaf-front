@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 
 import { User } from './../../../core/models/user.model';
+import { Product } from './../../../core/models/product.model';
 import { Location } from './../../../core/models/location.model';
 import { Secretary } from './../../../core/models/secretary.model';
 import { Wharehouse } from './../../../core/models/wharehouse.model';
@@ -14,6 +15,7 @@ import { FilterSolicitation } from './../../../core/models/filter/filter-solicit
 
 import { DialogManagerRequestComponent } from './dialog/dialog-manager-request/dialog-manager-request.component';
 
+import { ProductService } from '../../../shared/services/product.service';
 import { LocationService } from './../../../shared/services/location.service';
 import { SecretaryService } from '../../../shared/services/secretary.service';
 import { WharehouseService } from '../../../shared/services/wharehouse.service';
@@ -38,6 +40,7 @@ export class ManageAllRequestsComponent implements OnInit, AfterViewInit {
     allLocation: Location[];
     allSecretary: Secretary[];
     allWharehouse: Wharehouse[];
+    allproducts: Product[] = [];
     allSocitation: Solicitation[];
 
     currentUser: User;
@@ -53,11 +56,13 @@ export class ManageAllRequestsComponent implements OnInit, AfterViewInit {
 
     constructor(
         private dialog: MatDialog,
+        private formBuilder: FormBuilder,
+
+        private productService: ProductService,
+        private locationService: LocationService,
         private secretaryService: SecretaryService,
         private wharehouseService: WharehouseService,
         private solicitationService: SolicitationService,
-        private locationService: LocationService,
-        private formBuilder: FormBuilder
     ) { }
 
     ngOnInit(): void {
@@ -83,7 +88,8 @@ export class ManageAllRequestsComponent implements OnInit, AfterViewInit {
             this.solicitationService.findAllSolicitation(),
             this.secretaryService.findAllSecretary(),
             this.wharehouseService.findAllWharehouse(),
-            this.locationService.getAllLocation()
+            this.locationService.getAllLocation(),
+            this.productService.getAllProduct(),
         ]).subscribe((result) => {
 
             if (result[0].length > 0) {
@@ -107,6 +113,10 @@ export class ManageAllRequestsComponent implements OnInit, AfterViewInit {
                 this.allLocation = result[3];
             }
 
+            if (result[4].length > 0) {
+                this.allproducts = result[4];
+            }
+
         });
     }
 
@@ -126,7 +136,8 @@ export class ManageAllRequestsComponent implements OnInit, AfterViewInit {
         const dialogRef = this.dialog.open(DialogViewSolicitationComponent, {
             width: '800px',
             data: {
-                idSolicitation: id
+                idSolicitation: id,
+                allproducts: this.allproducts
             }
         });
 

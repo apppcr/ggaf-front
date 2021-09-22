@@ -8,13 +8,22 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Solicitation } from '../../../core/models/solicitation.model';
 import { Wharehouse } from '../../../core/models/wharehouse.model';
 import { Secretary } from '../../../core/models/secretary.model';
+import { Product } from '../../../core/models/product.model';
 import { User } from '../../../core/models/user.model';
 
+import { ProductService } from '../../../shared/services/product.service';
 import { LocationService } from '../../../shared/services/location.service';
 import { SecretaryService } from '../../../shared/services/secretary.service';
 import { WharehouseService } from '../../../shared/services/wharehouse.service';
 import { SolicitationService } from '../../../shared/services/solicitation.service';
 import { FilterSolicitation } from '../../../core/models/filter/filter-solicitation.models';
+
+import {
+    DialogViewSolicitationComponent
+} from '../../operator/dialog-view-solicitation/dialog-view-solicitation.component';
+import {
+    DialogManagerRequestComponent
+} from './../dialog/dialog-manager-request/dialog-manager-request.component';
 
 @Component({
     selector: 'app-manager-requests',
@@ -23,8 +32,7 @@ import { FilterSolicitation } from '../../../core/models/filter/filter-solicitat
 })
 export class ManagerRequestsComponent implements OnInit, AfterViewInit {
 
-    displayedColumns: string[] = ['numeroSolicitacao', 'solicitante', 'secretaria', 'almoxarifado', 'dataSolicitacao', 'status', 'pedidoPor', 'gerenciarPedido'];
-    // displayedColumns: string[] = ['numeroSolicitacao', 'solicitante', 'secretaria', 'almoxarifado', 'dataSolicitacao', 'status', 'pedidoPor', 'verPedido', 'gerenciarPedido'];
+    displayedColumns: string[] = ['numeroSolicitacao', 'solicitante', 'secretaria', 'almoxarifado', 'dataSolicitacao', 'status', 'pedidoPor', 'verPedido', 'gerenciarPedido'];
     dataSource = new MatTableDataSource<Solicitation>();
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -32,8 +40,10 @@ export class ManagerRequestsComponent implements OnInit, AfterViewInit {
 
     allLocation: Location[];
     allSecretary: Secretary[];
-    allWharehouseByUser: Wharehouse[];
+    allproducts: Product[] = [];
+    allWharehouse: Wharehouse[];
     allSocitation: Solicitation[];
+    allWharehouseByUser: Wharehouse[];
     allSocitationByUser: Solicitation[];
 
     currentUser: User;
@@ -49,11 +59,13 @@ export class ManagerRequestsComponent implements OnInit, AfterViewInit {
 
     constructor(
         private dialog: MatDialog,
+        private formBuilder: FormBuilder,
+
+        private productService: ProductService,
+        private locationService: LocationService,
         private secretaryService: SecretaryService,
         private wharehouseService: WharehouseService,
         private solicitationService: SolicitationService,
-        private locationService: LocationService,
-        private formBuilder: FormBuilder
     ) { }
 
     ngOnInit(): void {
@@ -79,7 +91,9 @@ export class ManagerRequestsComponent implements OnInit, AfterViewInit {
             this.solicitationService.findAllSolicitation(),
             this.secretaryService.findAllSecretary(),
             this.wharehouseService.findWarehouseByEmail(this.currentUser.email),
-            this.locationService.getAllLocation()
+            this.locationService.getAllLocation(),
+            this.productService.getAllProduct(),
+            this.wharehouseService.findAllWharehouse(),
         ]).subscribe((result) => {
 
             if (result[0].length > 0) {
@@ -105,6 +119,14 @@ export class ManagerRequestsComponent implements OnInit, AfterViewInit {
 
             if (result[3].length > 0) {
                 this.allLocation = result[3];
+            }
+
+            if (result[4].length > 0) {
+                this.allproducts = result[4];
+            }
+
+            if (result[5].length > 0) {
+                this.allWharehouse = result[5];
             }
 
         });
@@ -158,4 +180,35 @@ export class ManagerRequestsComponent implements OnInit, AfterViewInit {
         this.listRequester = this.allSocitationByUser.map(item => item.requester)
             .filter((v, i, a) => a.indexOf(v) === i);
     }
+
+    openDialogView(id: number) {
+        const dialogRef = this.dialog.open(DialogViewSolicitationComponent, {
+            width: '800px',
+            data: {
+                idSolicitation: id,
+                allproducts: this.allproducts
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(`Dialog result: ${result}`);
+        });
+    }
+
+    openDialogManageRequest(id: number) {
+        const dialogRef = this.dialog.open(DialogManagerRequestComponent, {
+            width: '600px',
+            data: {
+                idSolicitation: id,
+                allWharehouse: this.allWharehouse,
+                allproducts: this.allproducts
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            this.loadView();
+            console.log(`Dialog result: ${result}`);
+        });
+    }
+
 }
