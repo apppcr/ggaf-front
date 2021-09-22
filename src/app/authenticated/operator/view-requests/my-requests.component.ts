@@ -1,6 +1,10 @@
 import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 import { Observable } from 'rxjs';
 import 'rxjs/add/observable/forkJoin';
@@ -20,15 +24,19 @@ import {
     DialogViewSolicitationComponent
 } from '../dialog-view-solicitation/dialog-view-solicitation.component';
 
+
 @Component({
     selector: 'app-my-requests',
     templateUrl: './my-requests.component.html',
     styleUrls: ['./my-requests.component.scss']
 })
-export class MyRequestsComponent implements OnInit {
+export class MyRequestsComponent implements OnInit, AfterViewInit {
 
     displayedColumns: string[] = ['numeroSolicitacao', 'solicitante', 'dataSolicitacao', 'status', 'verPedido'];
-    dataSource = [];
+    dataSource: MatTableDataSource<any>;
+
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
 
     allSocitation: Solicitation[];
     allSecretary: Secretary[];
@@ -59,7 +67,9 @@ export class MyRequestsComponent implements OnInit {
 
             if (result[0].length > 0) {
                 this.allSocitation = result[0];
-                this.dataSource = this.allSocitation;
+                this.dataSource = new MatTableDataSource(this.allSocitation);
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
             }
 
             if (result[1].length > 0) {
@@ -75,7 +85,11 @@ export class MyRequestsComponent implements OnInit {
             }
 
         });
+    }
 
+    ngAfterViewInit() {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
     }
 
     openDialogView(id: number) {
@@ -94,6 +108,11 @@ export class MyRequestsComponent implements OnInit {
 
     newSocicitation(): void {
         this.router.navigate(['operador/new-request'])
+    }
+
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
 }
